@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+
+    <link href="../css/bootstrap.css" rel="stylesheet">
+    <link href="../css/responsive.css" rel="stylesheet">
+    <link href="../css/maps-site.css" rel="stylesheet">
+
+    <style type="text/css">
+    @media (min-width: 980px){
+      body {
+        padding-bottom: 40px;
+		background-color: #FFFFFF;
+	  }
+	}
+	</style>
+
+  </head>
+  <body onload="initialize();">
+
+    <div class="container">
+    	<div class="row">
+    		<h4>Register a complaint</h4>
+    		<p>We appreciate your criticism and hope to improve our service based on your input!</p>
+		</div><!--/row-->
+
+		<div class="row">
+			<form action="https://docs.google.com/spreadsheet/formResponse?formkey=dHdhWU5SZDRzcTEyeS1oVUwzdXdRaHc6MQ&amp;ifq" method="POST" id="ss-form">
+
+				<div class="span3 well visible-desktop">
+					<legend>Autocompleted Data</legend>
+					<span class="help-block">should populate based on QR code information</span>
+					<div class="ss-item ss-item-required ss-select">
+						<label class="ss-q-title" for="entry_0">
+							Transit Type
+							<span class="ss-required-asterisk">*</span>
+						</label>
+						<select class="span3" name="entry.0.single" id="entry_0">
+							<option value="Bus">Bus</option>
+						</select>
+					</div>
+					<hr>
+					<div class="ss-item ss-item-required ss-text">
+						<label class="ss-q-title" for="entry_1">
+							Vehicle/Station ID#
+							<span class="ss-required-asterisk">*</span>
+						</label>
+						<input type="text" name="entry.1.single" value="" class="ss-q-short span3" id="entry_1">
+						<span class="help-block" for="entry_1">i.e. the bus number or station ID</span>
+					</div>
+					<hr>
+					<div class="ss-item ss-item-required ss-text">
+						<label class="ss-q-title" for="entry_4">Latitude
+							<span class="ss-required-asterisk">*</span>
+						</label>
+						<input type="text" name="entry.4.single" value="" class="ss-q-short span3" id="entry_4">
+					</div>
+					<div class="ss-item ss-item-required ss-text">
+						<label class="ss-q-title" for="entry_5">Longitude
+							<span class="ss-required-asterisk">*</span>
+						</label>
+						<input type="text" name="entry.5.single" value="" class="ss-q-short span3" id="entry_5">
+					</div>
+				</div>
+
+				<div class="span4">
+					<legend>Register Feedback</legend>
+					<span class="help-block">What would you like to make us aware of?</span>
+					<div class="ss-item ss-item-required ss-checkbox">
+						<div class="ss-form-entry">
+							<label class="ss-q-title" for="entry_2">
+								Complaint Type
+								<span class="ss-required-asterisk">*</span>
+							</label>
+							
+							<ul class="unstyled">
+								<li class="ss-choice-item">
+									<label class="checkbox">
+										<input type="checkbox" name="entry.2.group" value="Late" class="ss-q-checkbox btn-large" id="group_2_1"> Late
+									</label>
+								</li>
+
+								<li class="ss-choice-item">
+									<label class="checkbox">
+										<input type="checkbox" name="entry.2.group" value="Late" class="ss-q-checkbox btn-large" id="group_2_2"> Dirty
+									</label>
+								</li>
+
+								<li class="ss-choice-item">
+									<label class="checkbox">
+										<input type="checkbox" name="entry.2.group" value="Late" class="ss-q-checkbox btn-large" id="group_2_3"> Broken Equipment
+									</label>
+								</li>
+
+								<li class="ss-choice-item">
+									<label class="checkbox">
+										<input type="checkbox" name="entry.2.group" value="Late" class="ss-q-checkbox btn-large" id="group_2_4"> Crowded
+									</label>
+								</li>
+
+								<li class="ss-choice-item">
+									<label class="checkbox">
+										<input type="checkbox" name="entry.2.group" value="Late" class="ss-q-checkbox btn-large" id="group_2_5"> Other
+									</label>
+									<span class="help-block">Please expand upon your complaint in the box below</span>
+								</li>
+							</ul>
+						</div>
+					</div>
+
+					<div class="ss-item ss-paragraph-text">
+						<label class="ss-q-title" for="entry_3">Additional notes on complaint</label>
+						<textarea name="entry.3.single" rows="4" class="ss-q-long span4" id="entry_3"></textarea>
+					</div>
+
+					<div class="ss-item ss-text">
+						<label class="ss-q-title" for="entry_6">Attach Image</label>
+					    <input type="file" accept="image/*" id="entry_6" name="entry.6.single">
+					    <div id="result"></div>
+					    <img id="image"width="200px" height="200px">
+					</div>
+
+					<div class="ss-item ss-navigate">
+						<button type="submit" name="submit" value="Submit" class="btn btn-success btn-block btn-large">Submit</button>
+					</div>
+
+				</div>
+
+				<input type="hidden" name="pageNumber" value="0">
+				<input type="hidden" name="backupCache" value="">
+
+			</form>
+
+
+
+		</div><!--/row-->
+
+		<br><hr>
+
+	    <footer>
+		    <p>&copy; Michael Emory 2012</p>
+	    </footer>
+	</div><!--/container-->
+
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+    <script src="../js/google-code-prettify/prettify.js"></script>
+    <script src="../js/jquery.js"></script>
+    <script src="../js/bootstrap-transition.js"></script>
+	<!--    <script src="../js/bootstrap-alert.js"></script> -->
+    <script src="../js/bootstrap-modal.js"></script>
+    <script src="../js/bootstrap-dropdown.js"></script>
+    <script src="../js/bootstrap-scrollspy.js"></script>
+    <script src="../js/bootstrap-tab.js"></script>
+	<!--    <script src="../js/bootstrap-tooltip.js"></script> -->
+	<!--    <script src="../js/bootstrap-popover.js"></script> -->
+	<!--    <script src="../js/bootstrap-button.js"></script> -->
+    <script src="../js/bootstrap-collapse.js"></script>
+    <script src="../js/bootstrap-carousel.js"></script>
+	<!--    <script src="js/bootstrap-typeahead.js"></script> -->
+    <script src="../js/application.js"></script>
+
+    <script>
+	    window.addEventListener("load", function(){
+		  document.getElementById("imageFile").addEventListener("change", function(){
+		    var reader = new FileReader();
+		    if (!window.File){
+		      result.innerHTML = "File API 使用不可";
+		      return;
+		    }
+		    reader.onload = function(event){
+		      document.getElementById("image").src = reader.result;
+		    };
+		    var file = document.getElementById("imageFile").files[0];
+		    reader.readAsDataURL(file);
+		  }, true);
+		}, true);
+    </script>
+
+    <script>
+		function initialize() 
+		{	
+			// This script is by Merge Database and Design, http://merged.ca/ -- if you use some, all, or any of this code, please offer a return link.
+			if (navigator.geolocation) 
+			{
+				navigator.geolocation.getCurrentPosition( function (position) {  
+
+					document.getElementById ("entry_4").value = position.coords.latitude;
+					document.getElementById ("entry_5").value = position.coords.longitude;
+		 			
+		 		}, // next function is the error callback
+		 			function (error)
+		 			{
+		 				switch(error.code) 
+		 				{
+		       				case error.TIMEOUT:
+		 						alert ('Timeout');
+		 						break;
+		 					case error.POSITION_UNAVAILABLE:
+		 						alert ('Position unavailable');
+		 						break;
+		 					case error.PERMISSION_DENIED:
+		 						alert ('Location Retrieval: permission denied. On mobile devices make sure the QR reader can access location services.');
+		 						break;
+		 					case error.UNKNOWN_ERROR:
+		 						alert ('Unknown error');
+		 						break;
+		 				}
+		 			}
+		 		);
+		 	} 
+		 	else 
+		 	{
+			  alert("I'm sorry, but geolocation services are not supported by your browser or you do not have a GPS device in your computer.");
+			}  
+		}
+    </script>
+
+	<!--#include virtual ="../ssi/google_analytic.ssi"-->
+  </body>
+</html>
