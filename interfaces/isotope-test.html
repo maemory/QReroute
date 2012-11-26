@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+
+    <link href="../css/bootstrap.css" rel="stylesheet">
+    <link href="../css/responsive.css" rel="stylesheet">
+    <link href="../css/maps-site.css" rel="stylesheet">
+    <link href="../css/maps-isotope.css" rel="stylesheet">
+
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+		background-color: #FFFFFF;
+	  }
+	</style>
+	<!-- Mapping Related scripts -->
+    <script type="text/javascript"
+      src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBT-Qxgp6JYWM9Hxjv5Gcd91vVtPFjsptg&sensor=false">
+    </script>
+    <script type="text/javascript"
+	  src="http://maps.googleapis.com/maps/api/js?libraries=visualization&sensor=false">
+	</script>
+    <!-- Chart related scripts -->
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+  </head>
+  <body>
+
+    <div class="container">
+      <div class="row">
+      <h4>What is the nature of your feedback?</h4><hr>
+      	<div class="span12 isotope variable-sizes clickable" id="container">
+          <div class="isotope-item category well one" data-filter=".one">
+              <h4 class="name">Unsafe</h4>
+              <div class="complaint hidden">
+                <form>
+                  <legend>Unsafe</legend>
+                  <span class="help-block">Provide some additional information to help us address your complaint.</span>
+                  <select>
+                    <option value="">Select an issue</option>
+                    <option value="101">Running Red Light/Stop Sign</option>
+                    <option value="102">Speeding</option>
+                    <option value="103">Allegedly Under Influence of Drugs/Alcohol</option>
+                    <option value="104">Using Mobile Phone or Radio</option>
+                    <option value="105">Eating/Drinking/Smoking</option>
+                    <option value="106">Collision</option>
+                    <option value="107">Fall On Board/Alighting (with Injury)</option>
+                    <option value="108">General Careless Operation</option>
+                  </select>
+
+                  <label>Additional notes on complaint</label>
+                  <textarea rows="4" style="width: 330px;"></textarea>
+
+                  <div>
+                    <label>Attach Image</label>
+                      <input type="file" accept="image/*">
+                      <div id="result"></div>
+                      <img id="image"width="200px" height="200px">
+                  </div>
+
+                </form>
+              </div><!--/complaint-->
+          </div>
+            
+          <div class="isotope-item category well two" data-filter=".two">
+              <h4 class="name">Negligence</h4>
+              <div class="complaint hidden">
+                <form>
+                  <legend>Negligence</legend>
+                  <span class="help-block">Provide some additional information to help us address your complaint.</span>
+                  <select>
+                    <option value="">Select an issue</option>
+                    <option value="101">Running Red Light/Stop Sign</option>
+                    <option value="102">Speeding</option>
+                    <option value="103">Allegedly Under Influence of Drugs/Alcohol</option>
+                    <option value="104">Using Mobile Phone or Radio</option>
+                    <option value="105">Eating/Drinking/Smoking</option>
+                    <option value="106">Collision</option>
+                    <option value="107">Fall On Board/Alighting (with Injury)</option>
+                    <option value="108">General Careless Operation</option>
+                  </select>
+
+                  <label>Additional notes on complaint</label>
+                  <textarea rows="4" style="width: 330px;"></textarea>
+
+                  <div>
+                    <label>Attach Image</label>
+                      <input type="file" accept="image/*">
+                      <div id="result"></div>
+                      <img id="image"width="200px" height="200px">
+                  </div>
+
+                </form>
+              </div><!--/complaint-->
+          </div>
+
+          <div class="isotope-item category well three" data-filter=".three">
+              <h4 class="name">Discourteous</h4>
+          </div>
+
+          <div class="isotope-item category well four" data-filter=".four">
+              <h4 class="name">Commendation</h4>
+          </div>
+            
+          <div class="isotope-item category well five" data-filter=".five">
+              <h4 class="name">Criminal</h4>
+          </div>
+
+          <div class="isotope-item category well six" data-filter=".six">
+              <h4 class="name">Service Failure</h4>
+          </div>
+
+          <div class="isotope-item category well seven" data-filter=".seven">
+              <h4 class="name">Service Planning</h4>
+          </div>
+            
+          <div class="isotope-item category well eight" data-filter=".eight">
+              <h4 class="name">Other</h4>
+          </div>
+
+    	</div><!--/span12-->
+    </div>
+		<br><hr>
+    <!-- Button to show all options again -->
+    <!-- <a href="#" data-filter="*" id="show-all"><button class="btn">Show All Options</button></a> -->
+
+	    <footer>
+		    <p>&copy; Michael Emory 2012</p>
+	    </footer>
+	</div><!--/container-->
+
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+    <script src="../js/google-code-prettify/prettify.js"></script>
+    <script src="../js/jquery.js"></script>
+    <script src="../js/bootstrap-transition.js"></script>
+	<!--    <script src="../js/bootstrap-alert.js"></script> -->
+    <script src="../js/bootstrap-modal.js"></script>
+    <script src="../js/bootstrap-dropdown.js"></script>
+    <script src="../js/bootstrap-scrollspy.js"></script>
+    <script src="../js/bootstrap-tab.js"></script>
+	<!--    <script src="../js/bootstrap-tooltip.js"></script> -->
+	<!--    <script src="../js/bootstrap-popover.js"></script> -->
+	<!--    <script src="../js/bootstrap-button.js"></script> -->
+    <script src="../js/bootstrap-collapse.js"></script>
+    <script src="../js/bootstrap-carousel.js"></script>
+	<!--    <script src="js/bootstrap-typeahead.js"></script> -->
+    <!-- <script src="../js/application.js"></script> -->
+      <script src="../js/jquery-1.7.1.min.js"></script>
+    <script src="../js/jquery.isotope.min.js"></script>
+        <script>
+      $(function(){
+        
+        var $container = $('#container');
+        
+        $container.isotope({
+          itemSelector: '.isotope-item',
+          layoutMode : 'masonry',
+          masonry: {
+          columnWidth: 10
+      }
+        });
+      
+        $container.on('click','.isotope-item',function(){
+          if ($(this).hasClass('wide') == 0) {    
+            $(this).toggleClass('wide');
+            $(this).children('.complaint').toggleClass('hidden');
+            $(this).children('.name').toggleClass('hidden');
+
+            var selector = $(this).attr('data-filter');
+            $container.isotope({ filter: selector });
+
+            $container.isotope('reLayout');
+          }
+        });
+      
+      // filter items when filter link is clicked
+      $('#show-all').click(function(){
+        var selector = $(this).attr('data-filter');
+        $container.isotope({ filter: selector });
+        $('#container').isotope();
+        return false;
+      });
+    });
+  </script>
+
+  </body>
+</html>

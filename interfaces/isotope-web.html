@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+
+    <link href="../css/bootstrap.css" rel="stylesheet">
+    <link href="../css/responsive.css" rel="stylesheet">
+    <link href="../css/maps-site.css" rel="stylesheet">
+    <link href="../css/maps-isotope.css" rel="stylesheet">
+
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+		background-color: #FFFFFF;
+	  }
+    .category {
+      min-height: 20px;
+      padding: 19px;
+      margin-bottom: 20px;
+      background-color: #B8B8B8;
+      border: 1px solid ##B8B8B8;
+      -webkit-border-radius: 4px;
+      -moz-border-radius: 4px;
+      border-radius: 4px;
+      -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+      -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+      box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+    }
+	</style>
+	<!-- Mapping Related scripts -->
+    <script type="text/javascript"
+      src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBT-Qxgp6JYWM9Hxjv5Gcd91vVtPFjsptg&sensor=false">
+    </script>
+    <script type="text/javascript"
+	  src="http://maps.googleapis.com/maps/api/js?libraries=visualization&sensor=false">
+	</script>
+    <!-- Chart related scripts -->
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+  </head>
+  <body>
+
+    <div class="container">
+      <div class="row">
+        <div class="span10">
+          <h1><img src="../images/sfcounty.png" style="height: 50px;"> <img src="../images/SFMTA-logo.jpg" style="height: 50px;">Feedback Form</h1>
+          <p>We appreciate your efforts to help us improve our services. Click on the button at right which best describes your feedback.</p>
+        </div>
+
+        <hr>
+
+        <div class="span4">
+          <legend>Transit Data</legend>
+          <span class="help-block">Provide some additional information to help categorize your complaint.</span>
+
+            <label>Transit Type *</label>
+            <select class="span3">
+              <option value=""></option>
+              <option value="Station">Station</option>
+              <option value="Vehicle">Vehicle</option>
+            </select>
+
+          <hr>
+
+            <label>Vehicle/Station ID# *</label>
+            <input type="text" name="entry.1.single" value="" class="ss-q-short span3" id="entry_1">
+            <span class="help-block">i.e. the bus number or station ID</span>
+
+          <hr>
+
+            <label class="ss-q-title" for="entry_4">Location/Address</label>
+            <input type="text" name="entry.4.single" value="" class="ss-q-short span3" id="entry_4">
+            <hr>
+            <a href="#" class="btn btn-large btn-block">Submit</a>
+        </div><!--/span4-->
+
+        <div class="span6 isotope variable-sizes clickable" id="container">
+            <div class="isotope-item category one" data-filter=".one">
+                <h4 class="name">Unsafe</h4>
+                <div class="complaint hidden">
+                  <form>
+                    <legend>Unsafe</legend>
+                    <span class="help-block">Provide some additional information to help us address your complaint.</span>
+                    <select>
+                      <option value="">Select an issue</option>
+                      <option value="101">Running Red Light/Stop Sign</option>
+                      <option value="102">Speeding</option>
+                      <option value="103">Allegedly Under Influence of Drugs/Alcohol</option>
+                      <option value="104">Using Mobile Phone or Radio</option>
+                      <option value="105">Eating/Drinking/Smoking</option>
+                      <option value="106">Collision</option>
+                      <option value="107">Fall On Board/Alighting (with Injury)</option>
+                      <option value="108">General Careless Operation</option>
+                    </select>
+
+                    <label>Additional notes on complaint</label>
+                    <textarea rows="4" style="width: 330px;"></textarea>
+
+                    <div>
+                      <label>Attach Image:</label>
+                        <input type="file" accept="image/*">
+                        <div id="result"></div>
+                        <img id="image"width="200px" height="200px">
+                    </div>
+
+                  </form>
+                </div><!--/complaint-->
+            </div>
+              
+            <div class="isotope-item category two" data-filter=".two">
+                <h4 class="name">Negligence</h4>
+                <div class="complaint hidden">
+                  <form>
+                    <legend>Negligence</legend>
+                    <span class="help-block">Provide some additional information to help us address your complaint.</span>
+                    <select>
+                      <option value="">Select an issue</option>
+                      <option value="201">Pass Up/Did Not Wait for Transferees</option>
+                      <option value="201A">Pass Up Wheelchair/Lift/Ramp User</option>
+                      <option value="202">Ignored Stop Request</option>
+                      <option value="203">No En Route Announcements</option>
+                      <option value="203A">No En Route Announcements (ADA)</option>
+                      <option value="204">Inadequate Delay Announcements</option>
+                      <option value="205">Off Route/Did Not Complete Route</option>
+                      <option value="206">Not Adhering to Schedule</option>
+                      <option value="207A">Refused to Kneel Bus/Lower Steps</option>
+                      <option value="208A">Did Not Ask Priority Seats to be Vacated</option>
+                      <option value="209A">Did Not Pull to Curb for Disabled</option>
+                      <option value="210A">Refused to Accommodate Service Animal</option>
+                      <option value="211">Unauthorized Stop/Delay</option>
+                      <option value="212">Did Not Enforce Rules</option>
+                      <option value="213">General Distraction from Duty</option>
+                    </select>
+
+                    <label>Additional notes on complaint</label>
+                    <textarea rows="4" style="width: 330px;"></textarea>
+
+                    <div>
+                      <label>Attach Image:</label>
+                        <input type="file" accept="image/*">
+                        <div id="result"></div>
+                        <img id="image"width="200px" height="200px">
+                    </div>
+
+                  </form>
+                </div><!--/complaint-->
+            </div>
+
+            <div class="isotope-item category three" data-filter=".three">
+                <h4 class="name">Discourteous</h4>
+                <div class="complaint hidden">
+                  <form>
+                    <legend>Discourteous</legend>
+                    <span class="help-block">Provide some additional information to help us address your complaint.</span>
+                    <select>
+                      <option value="">Select an issue</option>
+                      <option value="301">Discourtesy to Customer</option>
+                      <option value="301A">Discourtesy Due to Customer Disability</option>
+                      <option value="302">Altercation: Employee/Customer</option>
+                      <option value="303">Fare/Transfer/POP Dispute</option>
+                      <option value="304">Mishandling Funds/Transfers</option>
+                      <option value="305">Refused Vehicle as Terminal Shelter</option>
+                      <option value="306">General Unprofessional Conduct/Appearance</option>
+                    </select>
+
+                    <label>Additional notes on complaint</label>
+                    <textarea rows="4" style="width: 330px;"></textarea>
+
+                    <div>
+                      <label>Attach Image:</label>
+                        <input type="file" accept="image/*">
+                        <div id="result"></div>
+                        <img id="image"width="200px" height="200px">
+                    </div>
+
+                  </form>
+                </div><!--/complaint-->
+              </div>
+
+            <div class="isotope-item category four" data-filter=".four">
+                <h4 class="name">Commendation</h4>
+                <div class="complaint hidden">
+                  <form>
+                    <legend>Commendation</legend>
+                    <span class="help-block">Provide some additional information to help us address your commendation.</span>
+                    <textarea rows="4" style="width: 330px;"></textarea>
+
+                    <div>
+                      <label>Attach Image:</label>
+                        <input type="file" accept="image/*">
+                        <div id="result"></div>
+                        <img id="image"width="200px" height="200px">
+                    </div>
+
+                  </form>
+                </div>
+            </div>
+              
+            <div class="isotope-item category five" data-filter=".five">
+                <h4 class="name">Criminal</h4>
+                <div class="complaint hidden">
+                  <form>
+                    <legend>Criminal</legend>
+                    <span class="help-block">Provide some additional information to help us address your complaint.</span>
+                    <select>
+                      <option value="">Select an issue</option>
+                      <option value="501">Altercation: Miscellaneous</option>
+                      <option value="502">Larceny/Theft</option>
+                      <option value="503">Fare Evasion/Transfer Abuse</option>
+                      <option value="504">Disorderly Conduct/Disturbance</option>
+                    </select>
+
+                    <label>Additional notes on complaint</label>
+                    <textarea rows="4" style="width: 330px;"></textarea>
+
+                    <div>
+                      <label>Attach Image:</label>
+                        <input type="file" accept="image/*">
+                        <div id="result"></div>
+                        <img id="image"width="200px" height="200px">
+                    </div>
+
+                  </form>
+                </div><!--/complaint-->
+              </div>
+
+            <div class="isotope-item category six" data-filter=".six">
+                <h4 class="name">Service Failure</h4>
+                <div class="complaint hidden">
+                  <form>
+                    <legend>Service Failure</legend>
+                    <span class="help-block">Provide some additional information to help us address your complaint.</span>
+                    <select>
+                      <option value="">Select an issue</option>
+                      <option value="601">Delay/No-Show</option>
+                      <option value="603">Switchback</option>
+                      <option value="604">Vehicle Appearance</option>
+                      <option value="605">Vehicle Maintenance/Noise</option>
+                      <option value="606A">Wheelchair Lift/Securements Defective</option>
+                      <option value="607">Track/ATCS Maintenance</option>
+                      <option value="610">Fare Collection Equipment</option>
+                      <option value="611">Signs, Maps, and Auto-Announcements</option>
+                    </select>
+
+                    <label>Additional notes on complaint</label>
+                    <textarea rows="4" style="width: 330px;"></textarea>
+
+                    <div>
+                      <label>Attach Image:</label>
+                        <input type="file" accept="image/*">
+                        <div id="result"></div>
+                        <img id="image"width="200px" height="200px">
+                    </div>
+
+                  </form>
+                </div><!--/complaint-->
+              </div>
+
+            <div class="isotope-item category seven" data-filter=".seven">
+                <h4 class="name">Service Planning</h4>
+                <div class="complaint hidden">
+                  <form>
+                    <legend>Service Planning</legend>
+                    <span class="help-block">Provide some additional information to help us address your complaint.</span>
+                    <select>
+                      <option value="">Select an issue</option>
+                      <option value="701">Insufficient Frequency</option>
+                      <option value="702">Lines/Routes: Current/Proposed</option>
+                      <option value="703">Stop Changes</option>
+                      <option value="704">Shelter Requests</option>
+                    </select>
+
+                    <label>Additional notes on complaint</label>
+                    <textarea rows="4" style="width: 330px;"></textarea>
+
+                    <div>
+                      <label>Attach Image:</label>
+                        <input type="file" accept="image/*">
+                        <div id="result"></div>
+                        <img id="image"width="200px" height="200px">
+                    </div>
+
+                  </form>
+                </div><!--/complaint-->
+              </div>
+              
+            <div class="isotope-item category eight" data-filter=".eight">
+                <h4 class="name">Other</h4>
+                <div class="complaint hidden">
+                  <form>
+                    <legend>Other</legend>
+                    <span class="help-block">Provide some additional information to help us address your complaint.</span>
+                    <select>
+                      <option value="">Select an issue</option>
+                      <option value="801">NextMuni/Technology</option>
+                      <option value="802">Advertising/Marketing</option>
+                      <option value="803">Personal Property Damage</option>
+                      <option value="804">Fare Media Issues</option>
+                      <option value="805">System Commendation</option>
+                    </select>
+
+                    <label>Additional notes on complaint</label>
+                    <textarea rows="4" style="width: 330px;"></textarea>
+
+                    <div>
+                      <label>Attach Image:</label>
+                        <input type="file" accept="image/*">
+                        <div id="result"></div>
+                        <img id="image"width="200px" height="200px">
+                    </div>
+
+                  </form>
+                </div><!--/complaint-->
+              </div>
+
+      	</div><!--/span8-->
+      </div><!--/row-->
+
+  		<hr>
+      <!-- Button to show all options again -->
+      <!-- <a href="#" data-filter="*" id="show-all"><button class="btn">Show All Options</button></a> -->
+
+	    <footer>
+
+	    </footer>
+	</div><!--/container-->
+
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+    <script src="../js/google-code-prettify/prettify.js"></script>
+    <script src="../js/jquery.js"></script>
+    <script src="../js/bootstrap-transition.js"></script>
+	<!--    <script src="../js/bootstrap-alert.js"></script> -->
+    <script src="../js/bootstrap-modal.js"></script>
+    <script src="../js/bootstrap-dropdown.js"></script>
+    <script src="../js/bootstrap-scrollspy.js"></script>
+    <script src="../js/bootstrap-tab.js"></script>
+	<!--    <script src="../js/bootstrap-tooltip.js"></script> -->
+	<!--    <script src="../js/bootstrap-popover.js"></script> -->
+	<!--    <script src="../js/bootstrap-button.js"></script> -->
+    <script src="../js/bootstrap-collapse.js"></script>
+    <script src="../js/bootstrap-carousel.js"></script>
+	<!--    <script src="js/bootstrap-typeahead.js"></script> -->
+    <!-- <script src="../js/application.js"></script> -->
+      <script src="../js/jquery-1.7.1.min.js"></script>
+    <script src="../js/jquery.isotope.min.js"></script>
+        <script>
+      $(function(){
+        
+        var $container = $('#container');
+        
+        $container.isotope({
+          itemSelector: '.isotope-item',
+          layoutMode : 'masonry',
+          masonry: {
+          columnWidth: 10
+      }
+        });
+      
+        $container.on('click','.isotope-item',function(){
+          if ($(this).hasClass('wide') == 0) {    
+            $(this).toggleClass('wide');
+            $(this).children('.complaint').toggleClass('hidden');
+            $(this).children('.name').toggleClass('hidden');
+
+            var selector = $(this).attr('data-filter');
+            $container.isotope({ filter: selector });
+
+            $container.isotope('reLayout');
+          }
+        });
+      
+      // filter items when filter link is clicked
+      $('#show-all').click(function(){
+        var selector = $(this).attr('data-filter');
+        $container.isotope({ filter: selector });
+        $('#container').isotope();
+        return false;
+      });
+    });
+  </script>
+
+  </body>
+</html>
