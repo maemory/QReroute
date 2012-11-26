@@ -113,7 +113,7 @@ function uniqueShapes() {
 	var query = "SELECT 'shape_id' FROM " +
 	    '1i2RNtijNTRAaoFMjbUX1wMo3smc2nQkAsCRfPBk'
 	     + " GROUP BY 'shape_id'"
-	     + " LIMIT 30"; 
+	     + " LIMIT 100"; 
 
 	var encodedQuery = encodeURIComponent(query);
 
@@ -148,9 +148,31 @@ function drawPolyline() {
 	var selectInput = document.getElementById("shape-select");
 	var strRoute = selectInput.options[selectInput.selectedIndex].text;
 
+	var routeColor;
+
+	switch(strRoute[0]) {
+		case '1':
+		case '2':
+		case '3':
+			routeColor = "#EE352E";
+			break;
+		case '4':
+		case '5':
+		case '6':
+			routeColor = "#00933C";
+			break;
+		case 'A':
+		case 'C':
+		case 'E':
+			routeColor = "#2850AD";
+			break;
+		default:
+			routeColor = "#B933AD";
+	}
+
 	var polyOptions = {
-	    strokeColor: "#00933C",
-	    strokeOpacity: 1.0,
+	    strokeColor: routeColor,
+	    strokeOpacity: 0.7,
 	    strokeWeight: 3,
 	}
 
@@ -183,15 +205,15 @@ function drawPolyline() {
 	    for (var i in rows) {
 	      var lat_i = rows[i][0];
 	      var long_i = rows[i][1];
-	      var dataElement = document.createElement('div');
-	      var locElement = document.createElement('p');
-	      locElement.innerHTML = 'Point ' + i + ': ' + lat_i + ', ' + long_i;
-	      locElement.className = 'latLng-disp';
+	      // var dataElement = document.createElement('div');
+	      // var locElement = document.createElement('p');
+	      // locElement.innerHTML = 'Point ' + i + ': ' + lat_i + ', ' + long_i;
+	      // locElement.className = 'latLng-disp';
 
-	      if (i < 10) {
-	          dataElement.appendChild(locElement);
-	          ftData.appendChild(dataElement);
-	      }
+	      // if (i < 10) {
+	      //     dataElement.appendChild(locElement);
+	      //     ftData.appendChild(dataElement);
+	      // }
 
 	      var next_loc = new google.maps.LatLng(lat_i,long_i);
 
