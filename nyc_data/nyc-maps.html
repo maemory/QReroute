@@ -54,6 +54,11 @@
     </div><!--/navbar-fixed-top-->
 
     <div class="container">
+
+      <div class="row">
+        <div class="map-box" id="map_canvas"></div>
+      </div><!--/row-->
+      <br>
     	<div class="row">
 	    	<div class="span3 well">
 	    		<form>
@@ -64,20 +69,18 @@
             <label class="checkbox">
                 <input type="checkbox" onchange="toggleRoutes()"> Transit Line
             </label>
+            <label class="checkbox">
+                <input type="checkbox" onchange="toggleAllRoutes()"> Show All
+            </label>
             <select id="shape-select" onchange="drawPolyline()">
               <option>Select a route:</option>
             </select>
   				</form>
 	    	</div>
-
-        <div class="span8">
-  		    <div class="map-box" id="map_canvas"></div>
-        </div><!--/span8-->
-		</div><!--/row-->
-    <br>
-    <div class="row">
-      <div id="ft-data"></div>
-    </div>
+        <div class="span8 well">
+          <div id="ft-data"></div>
+        </div>
+      </div><!--/row-->
 		<br><hr>
 
 	    <footer>

@@ -3,10 +3,15 @@
  * ======================================================== */
 // google.load('visualization', '1.0', {'packages':['corechart','table']});
 
+var ftidShapes = '1i2RNtijNTRAaoFMjbUX1wMo3smc2nQkAsCRfPBk';
+var ftidTrips = '1I_yESx3I_Xet3JEM2l0DWHj76cu_gsx7vw2YYXM';
+var ftidStops = '17Y_13i04CsvoEVpm7qgQ4SpxJbl8K9c4u1vyVo0';
+
 var map;
 var transitLayer,fusion_dat;
 var markers = [];
 var route_line;
+var routes = [];
 
 
 function initialize() {
@@ -84,11 +89,11 @@ function initialize() {
 
 	var styledMap = new google.maps.StyledMapType(styles, {name: "Memory"});
 
-	var newYork = new google.maps.LatLng(40.671987,-73.964375);
+	var newYork = new google.maps.LatLng(40.753357,-73.984375);
 
 	var mapOptions = {
 	  center: newYork,
-	  zoom: 11,
+	  zoom: 12,
 	  mapTypeControlStyle: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
 	  streetViewControl: false,
 	  panControl: false,
@@ -110,10 +115,12 @@ function initialize() {
 }
 
 function uniqueShapes() {
-	var query = "SELECT 'shape_id' FROM " +
-	    '1i2RNtijNTRAaoFMjbUX1wMo3smc2nQkAsCRfPBk'
+	// var query = "SELECT 'route_id' FROM " + ftidTrips
+	//      + " GROUP BY 'route_id'"
+	//      + " LIMIT 100"; 
+	var query = "SELECT 'shape_id' FROM " + ftidTrips
 	     + " GROUP BY 'shape_id'"
-	     + " LIMIT 100"; 
+	     + " LIMIT 10"; 
 
 	var encodedQuery = encodeURIComponent(query);
 
@@ -183,7 +190,7 @@ function drawPolyline() {
 	var path = route_line.getPath();
 
 	var query = "SELECT 'shape_pt_lat','shape_pt_lon' FROM " +
-	    '1i2RNtijNTRAaoFMjbUX1wMo3smc2nQkAsCRfPBk' + " WHERE 'shape_id'='"+strRoute+"'"
+	    ftidShapes + " WHERE 'shape_id'='"+strRoute+"'"
 	     + " ORDER BY 'shape_pt_sequence'"
 	     + "LIMIT 10000"; 
 
@@ -205,15 +212,6 @@ function drawPolyline() {
 	    for (var i in rows) {
 	      var lat_i = rows[i][0];
 	      var long_i = rows[i][1];
-	      // var dataElement = document.createElement('div');
-	      // var locElement = document.createElement('p');
-	      // locElement.innerHTML = 'Point ' + i + ': ' + lat_i + ', ' + long_i;
-	      // locElement.className = 'latLng-disp';
-
-	      // if (i < 10) {
-	      //     dataElement.appendChild(locElement);
-	      //     ftData.appendChild(dataElement);
-	      // }
 
 	      var next_loc = new google.maps.LatLng(lat_i,long_i);
 
@@ -221,7 +219,35 @@ function drawPolyline() {
 	    }
 	  }
 	});
+
+	// plot map
 	route_line.setMap(map);
+
+	google.maps.event.addListener(route_line, 'mouseover', function() {
+     route_line.setOptions({
+       strokeOpacity: 1,
+       strokeWeight: 4
+     });
+    });
+
+	var infoString = "MTA Route: "+strRoute;
+
+    google.maps.event.addListener(route_line, 'click',  function(event) {
+	 var infowindow = new google.maps.InfoWindow();
+     infowindow.content = infoString;
+     infowindow.position = event.latLng;
+     infowindow.open(map);
+   });
+
+   google.maps.event.addListener(route_line, 'mouseout', function() {
+     route_line.setOptions({
+       strokeOpacity: 0.7,
+       strokeWeight: 3
+     });
+   });
+
+   routes.push(route_line);
+
 }
 
 function toggleTransit() {
@@ -230,6 +256,13 @@ function toggleTransit() {
 
 function toggleRoutes() {
 	route_line.setMap(route_line.getMap() ? null : map);
+}
+
+function toggleAllRoutes() {
+	clearMap();
+	for (var i in routes) {
+		routes[i].setMap(map);
+	}
 }
 
 function clearMap() {
