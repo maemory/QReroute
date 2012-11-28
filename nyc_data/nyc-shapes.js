@@ -6,6 +6,7 @@
 var ftidShapes = '1i2RNtijNTRAaoFMjbUX1wMo3smc2nQkAsCRfPBk';
 var ftidTrips = '1I_yESx3I_Xet3JEM2l0DWHj76cu_gsx7vw2YYXM';
 var ftidStops = '17Y_13i04CsvoEVpm7qgQ4SpxJbl8K9c4u1vyVo0';
+var ftidStopTimes = '1WwkY8qCCEcUTJ-bw0-gRhn3KQ6d0cNsZ4-DCnxo';
 
 var map;
 var transitLayer,fusion_dat;
@@ -111,7 +112,7 @@ function initialize() {
 	transitLayer = new google.maps.TransitLayer();
 
 	// populate list of routes
-	uniqueShapes();
+	uniqueTripId();
 }
 
 function uniqueShapes() {
@@ -149,15 +150,76 @@ function uniqueShapes() {
 	});
 }
 
-function drawPolyline() {
+function uniqueTripId() {
+	var query = "SELECT 'trip_id' FROM " + ftidStopTimes
+	     + " GROUP BY 'trip_id'"
+	     + " ORDER BY 'arrival_time'"
+	     + " LIMIT 5"; 
 
+	var encodedQuery = encodeURIComponent(query);
+
+	// Construct the URL
+	var url = ['https://www.googleapis.com/fusiontables/v1/query'];
+	url.push('?sql=' + encodedQuery);
+	url.push('&key=AIzaSyBT-Qxgp6JYWM9Hxjv5Gcd91vVtPFjsptg');
+	url.push('&callback=?');
+
+	// Send the JSONP request using jQuery
+	$.ajax({
+	  url: url.join(''),
+	  dataType: 'jsonp',
+	  success: function (data) {
+	    var rows = data['rows'];
+	    var ftData = document.getElementById('shape-select');
+	    for (var i in rows) {
+	      var trip = rows[i][0];
+	      var tripElement = document.createElement('option');
+	      tripElement.innerHTML = trip;
+	      tripElement.className = 'trip-disp';
+
+          ftData.appendChild(tripElement);
+	    }
+	  }
+	});
+}
+
+function getShapIdFromTripId() {
 	// get input from select statement
 	var selectInput = document.getElementById("shape-select");
-	var strRoute = selectInput.options[selectInput.selectedIndex].text;
+	var tripId = selectInput.options[selectInput.selectedIndex].text;
+
+	var query = "SELECT 'shape_id' FROM " + ftidTrips
+		+ " WHERE 'trip_id'='"+tripId+"'"
+	     + "LIMIT 1"; 
+
+	var encodedQuery = encodeURIComponent(query);
+
+	// Construct the URL
+	var url = ['https://www.googleapis.com/fusiontables/v1/query'];
+	url.push('?sql=' + encodedQuery);
+	url.push('&key=AIzaSyBT-Qxgp6JYWM9Hxjv5Gcd91vVtPFjsptg');
+	url.push('&callback=?');
+
+	// Send the JSONP request using jQuery
+	$.ajax({
+	  url: url.join(''),
+	  dataType: 'jsonp',
+	  success: function (data) {
+	    var rows = data['rows'];
+	    for (var i in rows) {
+	      var shapeId = rows[i][0];
+
+	      drawPolyline(shapeId);
+	    }
+	  }
+	});
+}
+
+function drawPolyline(shapeId) {
 
 	var routeColor;
 
-	switch(strRoute[0]) {
+	switch(shapeId[0]) {
 		case '1':
 		case '2':
 		case '3':
@@ -189,10 +251,10 @@ function drawPolyline() {
 
 	var path = route_line.getPath();
 
-	var query = "SELECT 'shape_pt_lat','shape_pt_lon' FROM " +
-	    ftidShapes + " WHERE 'shape_id'='"+strRoute+"'"
-	     + " ORDER BY 'shape_pt_sequence'"
-	     + "LIMIT 10000"; 
+	var query = "SELECT 'shape_pt_lat','shape_pt_lon' FROM " + ftidShapes
+	    + " WHERE 'shape_id'='"+shapeId+"'"
+	    + " ORDER BY 'shape_pt_sequence'"
+	    + "LIMIT 10000"; 
 
 	var encodedQuery = encodeURIComponent(query);
 
@@ -223,17 +285,22 @@ function drawPolyline() {
 	// plot map
 	route_line.setMap(map);
 
-	google.maps.event.addListener(route_line, 'mouseover', function() {
+	// specify interactivity of polyline
+
+	google.maps.event.addListener(route_line, 'mouseover', function(event) {
      route_line.setOptions({
        strokeOpacity: 1,
        strokeWeight: 4
      });
+
+	 infowindow.content = infoString;
+     infowindow.position = event.latLng;
+     infowindow.open(map);
     });
 
-	var infoString = "MTA Route: "+strRoute;
-
+	var infoString = "MTA Route: "+shapeId;
     google.maps.event.addListener(route_line, 'click',  function(event) {
-	 var infowindow = new google.maps.InfoWindow();
+     var infowindow = new google.maps.InfoWindow();
      infowindow.content = infoString;
      infowindow.position = event.latLng;
      infowindow.open(map);

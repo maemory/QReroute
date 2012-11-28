@@ -56,7 +56,7 @@
     <div class="container">
 
       <div class="row">
-        <div class="map-box" id="map_canvas"></div>
+        <div class="map-box" id="map_canvas" style="height: 500px"></div>
       </div><!--/row-->
       <br>
     	<div class="row">
@@ -69,10 +69,10 @@
             <label class="checkbox">
                 <input type="checkbox" onchange="toggleRoutes()"> Transit Line
             </label>
-            <label class="checkbox">
+            <label class="checkbox hidden">
                 <input type="checkbox" onchange="toggleAllRoutes()"> Show All
             </label>
-            <select id="shape-select" onchange="drawPolyline()">
+            <select id="shape-select" onchange="getShapIdFromTripId()">
               <option>Select a route:</option>
             </select>
   				</form>
