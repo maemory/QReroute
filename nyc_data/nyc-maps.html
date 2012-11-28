@@ -69,13 +69,11 @@
             <label class="checkbox">
                 <input type="checkbox" onchange="toggleRoutes()"> Transit Line
             </label>
-            <label class="checkbox hidden">
-                <input type="checkbox" onchange="toggleAllRoutes()"> Show All
-            </label>
-            <select id="shape-select" onchange="getShapIdFromTripId()">
+            <select id="shape-select" onchange="getShapeIdFromServiceId()">
               <option>Select a route:</option>
             </select>
   				</form>
+          <button class="btn" onclick="clearMap()"> Clear All</button>
 	    	</div>
         <div class="span8 well">
           <div id="ft-data"></div>

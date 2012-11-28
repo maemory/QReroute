@@ -11,9 +11,7 @@ var ftidStopTimes = '1WwkY8qCCEcUTJ-bw0-gRhn3KQ6d0cNsZ4-DCnxo';
 var map;
 var transitLayer,fusion_dat;
 var markers = [];
-var route_line;
 var routes = [];
-
 
 function initialize() {
 
@@ -112,13 +110,10 @@ function initialize() {
 	transitLayer = new google.maps.TransitLayer();
 
 	// populate list of routes
-	uniqueTripId();
+	uniqueServiceId();
 }
 
 function uniqueShapes() {
-	// var query = "SELECT 'route_id' FROM " + ftidTrips
-	//      + " GROUP BY 'route_id'"
-	//      + " LIMIT 100"; 
 	var query = "SELECT 'shape_id' FROM " + ftidTrips
 	     + " GROUP BY 'shape_id'"
 	     + " LIMIT 10"; 
@@ -183,14 +178,48 @@ function uniqueTripId() {
 	});
 }
 
-function getShapIdFromTripId() {
+function uniqueServiceId() {
+	var query = "SELECT 'service_id' FROM " + ftidTrips
+	     + " GROUP BY 'service_id'"
+	     + " LIMIT 50"; 
+
+	var encodedQuery = encodeURIComponent(query);
+
+	// Construct the URL
+	var url = ['https://www.googleapis.com/fusiontables/v1/query'];
+	url.push('?sql=' + encodedQuery);
+	url.push('&key=AIzaSyBT-Qxgp6JYWM9Hxjv5Gcd91vVtPFjsptg');
+	url.push('&callback=?');
+
+	// Send the JSONP request using jQuery
+	$.ajax({
+	  url: url.join(''),
+	  dataType: 'jsonp',
+	  success: function (data) {
+	    var rows = data['rows'];
+	    var ftData = document.getElementById('shape-select');
+	    for (var i in rows) {
+	      var trip = rows[i][0];
+	      var tripElement = document.createElement('option');
+	      tripElement.innerHTML = trip;
+	      tripElement.className = 'trip-disp';
+
+          ftData.appendChild(tripElement);
+	    }
+	  }
+	});
+}
+
+function getShapeIdFromServiceId() {
+
 	// get input from select statement
 	var selectInput = document.getElementById("shape-select");
-	var tripId = selectInput.options[selectInput.selectedIndex].text;
+	var serviceId = selectInput.options[selectInput.selectedIndex].text;
 
 	var query = "SELECT 'shape_id' FROM " + ftidTrips
-		+ " WHERE 'trip_id'='"+tripId+"'"
-	     + "LIMIT 1"; 
+		+ " WHERE 'service_id'='"+serviceId+"'"
+		+ " GROUP BY 'shape_id'"
+	    + " LIMIT 50"; 
 
 	var encodedQuery = encodeURIComponent(query);
 
@@ -209,45 +238,61 @@ function getShapIdFromTripId() {
 	    for (var i in rows) {
 	      var shapeId = rows[i][0];
 
-	      drawPolyline(shapeId);
+	      addPolyline(shapeId);
 	    }
 	  }
 	});
+
+	plotRoutes();
 }
 
-function drawPolyline(shapeId) {
+function getShapeIdFromTripId() {
+	// get input from select statement
+	var selectInput = document.getElementById("shape-select");
+	var tripId = selectInput.options[selectInput.selectedIndex].text;
 
-	var routeColor;
+	var query = "SELECT 'shape_id' FROM " + ftidTrips
+		+ " WHERE 'trip_id'='"+tripId+"'"
+	     + "LIMIT 1"; 
 
-	switch(shapeId[0]) {
-		case '1':
-		case '2':
-		case '3':
-			routeColor = "#EE352E";
-			break;
-		case '4':
-		case '5':
-		case '6':
-			routeColor = "#00933C";
-			break;
-		case 'A':
-		case 'C':
-		case 'E':
-			routeColor = "#2850AD";
-			break;
-		default:
-			routeColor = "#B933AD";
-	}
+	var encodedQuery = encodeURIComponent(query);
+
+	// Construct the URL
+	var url = ['https://www.googleapis.com/fusiontables/v1/query'];
+	url.push('?sql=' + encodedQuery);
+	url.push('&key=AIzaSyBT-Qxgp6JYWM9Hxjv5Gcd91vVtPFjsptg');
+	url.push('&callback=?');
+
+	// Reset routes holder
+	clearMap();
+	routes.clear();
+
+	// Send the JSONP request using jQuery
+	$.ajax({
+	  url: url.join(''),
+	  dataType: 'jsonp',
+	  success: function (data) {
+	    var rows = data['rows'];
+	    for (var i in rows) {
+	      var shapeId = rows[i][0];
+
+	      routes=addPolyline(shapeId);
+	    }
+	  }
+	});
+
+	plotRoutes(routes);
+}
+
+function addPolyline(shapeId) {
 
 	var polyOptions = {
-	    strokeColor: routeColor,
-	    strokeOpacity: 0.7,
+	    strokeColor: routeColor(shapeId[0]),
+	    strokeOpacity: 0.2,
 	    strokeWeight: 3,
 	}
 
-	clearMap();
-
-	route_line = new google.maps.Polyline(polyOptions);
+	var route_line = new google.maps.Polyline(polyOptions);
 
 	var path = route_line.getPath();
 
@@ -282,9 +327,6 @@ function drawPolyline(shapeId) {
 	  }
 	});
 
-	// plot map
-	route_line.setMap(map);
-
 	// specify interactivity of polyline
 
 	google.maps.event.addListener(route_line, 'mouseover', function(event) {
@@ -292,10 +334,6 @@ function drawPolyline(shapeId) {
        strokeOpacity: 1,
        strokeWeight: 4
      });
-
-	 infowindow.content = infoString;
-     infowindow.position = event.latLng;
-     infowindow.open(map);
     });
 
 	var infoString = "MTA Route: "+shapeId;
@@ -308,13 +346,69 @@ function drawPolyline(shapeId) {
 
    google.maps.event.addListener(route_line, 'mouseout', function() {
      route_line.setOptions({
-       strokeOpacity: 0.7,
+       strokeOpacity: 0.2,
        strokeWeight: 3
      });
    });
 
-   routes.push(route_line);
+	// push new line
+	routes.push(route_line);
+}
 
+function plotRoutes() {
+	for (var i in routes) {
+		routes[i].setMap(map);
+	}
+}
+
+function routeColor(firstChar) {
+
+	switch(firstChar) {
+		case '1':
+		case '2':
+		case '3':
+			return "#EE352E";
+			break;
+		case '4':
+		case '5':
+		case '6':
+			return "#00933C";
+			break;
+		case 'A':
+		case 'C':
+		case 'E':
+			return "#2850AD";
+			break;
+		case 'B':
+		case 'D':
+		case 'F':
+		case 'M':
+			return '#FF6319';
+			break;
+		case 'N':
+		case 'Q':
+		case 'R':
+			return "#FCCC0A";
+			break;
+		case 'J':
+		case 'Z':
+			return "#996633";
+			break;
+		case 'G':
+			return "#6CBE45";
+			break;
+		case 'L':
+			return "#A7A9AC";
+			break;
+		case 'S':
+			return "#808183";
+			break;
+		case '7':
+			return "#B933AD";
+			break;
+		default:
+			return "#808183";
+	}
 }
 
 function toggleTransit() {
@@ -333,7 +427,7 @@ function toggleAllRoutes() {
 }
 
 function clearMap() {
-	if (route_line) {
-		route_line.setMap(null);
+	for (var i in routes) {
+		routes[i].setMap(null);
 	}
 }
