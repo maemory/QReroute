@@ -219,7 +219,8 @@ function getShapeIdFromServiceId() {
 	var query = "SELECT 'shape_id' FROM " + ftidTrips
 		+ " WHERE 'service_id'='"+serviceId+"'"
 		+ " GROUP BY 'shape_id'"
-	    + " LIMIT 50"; 
+		+ " ORDER BY 'shape_id'"
+	    + " LIMIT 5"; 
 
 	var encodedQuery = encodeURIComponent(query);
 
@@ -235,15 +236,31 @@ function getShapeIdFromServiceId() {
 	  dataType: 'jsonp',
 	  success: function (data) {
 	    var rows = data['rows'];
+	    console.log(rows.length);
+	    console.log(rows[0].length)
+	    var count = 1;
 	    for (var i in rows) {
 	      var shapeId = rows[i][0];
 
-	      addPolyline(shapeId);
+	      if (shapeId.length > 0) {
+		    var ftData = document.getElementById('ft-data');
+		    var shapeElement = document.createElement('p');
+		    shapeElement.innerHTML = 'Polyline #' + count + ': ' + shapeId;
+		    shapeElement.className = 'shape-disp';
+
+	        ftData.appendChild(shapeElement);
+
+		    addPolyline(shapeId);
+
+	  	    setPercentage('loadProgress', 100 * (i+1) / rows.length);
+	  	    count++;
+  	      }
 	    }
+
+	    plotRoutes();
+		setPercentage('loadProgress', 0);
 	  }
 	});
-
-	plotRoutes();
 }
 
 function getShapeIdFromTripId() {
@@ -277,6 +294,8 @@ function getShapeIdFromTripId() {
 	      var shapeId = rows[i][0];
 
 	      routes=addPolyline(shapeId);
+
+	      setPercentage("loadProgress", 50);
 	    }
 	  }
 	});
@@ -287,7 +306,7 @@ function getShapeIdFromTripId() {
 function addPolyline(shapeId) {
 
 	var polyOptions = {
-	    strokeColor: routeColor(shapeId[0]),
+	    strokeColor: routeColor(shapeId),
 	    strokeOpacity: 0.2,
 	    strokeWeight: 3,
 	}
@@ -361,55 +380,64 @@ function plotRoutes() {
 	}
 }
 
-function routeColor(firstChar) {
-
-	switch(firstChar) {
-		case '1':
-		case '2':
-		case '3':
-			return "#EE352E";
-			break;
-		case '4':
-		case '5':
-		case '6':
-			return "#00933C";
-			break;
-		case 'A':
-		case 'C':
-		case 'E':
-			return "#2850AD";
-			break;
-		case 'B':
-		case 'D':
-		case 'F':
-		case 'M':
-			return '#FF6319';
-			break;
-		case 'N':
-		case 'Q':
-		case 'R':
-			return "#FCCC0A";
-			break;
-		case 'J':
-		case 'Z':
-			return "#996633";
-			break;
-		case 'G':
-			return "#6CBE45";
-			break;
-		case 'L':
-			return "#A7A9AC";
-			break;
-		case 'S':
-			return "#808183";
-			break;
-		case '7':
-			return "#B933AD";
-			break;
-		default:
-			return "#808183";
+function routeColor(shapeId) {
+	if (shapeId[1] === '.') {
+		switch(shapeId[0]) {
+			case '1':
+			case '2':
+			case '3':
+				return "#EE352E";
+				break;
+			case '4':
+			case '5':
+			case '6':
+				return "#00933C";
+				break;
+			case 'A':
+			case 'C':
+			case 'E':
+				return "#2850AD";
+				break;
+			case 'B':
+			case 'D':
+			case 'F':
+			case 'M':
+				return '#FF6319';
+				break;
+			case 'N':
+			case 'Q':
+			case 'R':
+				return "#FCCC0A";
+				break;
+			case 'J':
+			case 'Z':
+				return "#996633";
+				break;
+			case 'G':
+				return "#6CBE45";
+				break;
+			case 'L':
+				return "#A7A9AC";
+				break;
+			case 'S':
+				return "#808183";
+				break;
+			case '7':
+				return "#B933AD";
+				break;
+			default:
+				return "#808183";
+		}
+	} else {
+		return "#FFFFFF";
 	}
 }
+
+function setPercentage(id, percent) {
+	var div = document.getElementById(id);
+	div.style.width = percent + '%';
+}
+
 
 function toggleTransit() {
 	transitLayer.setMap(transitLayer.getMap() ? null : map);
