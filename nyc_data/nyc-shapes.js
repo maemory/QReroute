@@ -220,7 +220,7 @@ function getShapeIdFromServiceId() {
 		+ " WHERE 'service_id'='"+serviceId+"'"
 		+ " GROUP BY 'shape_id'"
 		+ " ORDER BY 'shape_id'"
-	    + " LIMIT 5"; 
+	    + " LIMIT 100"; 
 
 	var encodedQuery = encodeURIComponent(query);
 
@@ -236,29 +236,29 @@ function getShapeIdFromServiceId() {
 	  dataType: 'jsonp',
 	  success: function (data) {
 	    var rows = data['rows'];
-	    console.log(rows.length);
-	    console.log(rows[0].length)
+
 	    var count = 1;
+	    var ftData = document.getElementById('line-data');
+
+	    // Clear current info
+	    $(".shape-disp").remove();
+
 	    for (var i in rows) {
 	      var shapeId = rows[i][0];
 
 	      if (shapeId.length > 0) {
-		    var ftData = document.getElementById('ft-data');
 		    var shapeElement = document.createElement('p');
-		    shapeElement.innerHTML = 'Polyline #' + count + ': ' + shapeId;
+		    shapeElement.innerHTML = 'Line #' + count + ': ' + shapeId;
 		    shapeElement.className = 'shape-disp';
 
 	        ftData.appendChild(shapeElement);
 
 		    addPolyline(shapeId);
-
-	  	    setPercentage('loadProgress', 100 * (i+1) / rows.length);
 	  	    count++;
   	      }
 	    }
 
 	    plotRoutes();
-		setPercentage('loadProgress', 0);
 	  }
 	});
 }
@@ -318,7 +318,7 @@ function addPolyline(shapeId) {
 	var query = "SELECT 'shape_pt_lat','shape_pt_lon' FROM " + ftidShapes
 	    + " WHERE 'shape_id'='"+shapeId+"'"
 	    + " ORDER BY 'shape_pt_sequence'"
-	    + "LIMIT 10000"; 
+	    + "LIMIT 5000"; 
 
 	var encodedQuery = encodeURIComponent(query);
 
@@ -355,23 +355,75 @@ function addPolyline(shapeId) {
      });
     });
 
-	var infoString = "MTA Route: "+shapeId;
-    google.maps.event.addListener(route_line, 'click',  function(event) {
-     var infowindow = new google.maps.InfoWindow();
-     infowindow.content = infoString;
-     infowindow.position = event.latLng;
-     infowindow.open(map);
-   });
+	google.maps.event.addListener(route_line, 'click',  function(event) {
+		// displayShapeInfo(shapeId);
+		var routeData = document.getElementById('route-data');
 
-   google.maps.event.addListener(route_line, 'mouseout', function() {
+	    // Clear current info
+	    $(".routeInfo").remove();
+
+		var infoText = document.createElement('p');
+	    infoText.innerHTML = "Route: " + shapeId[0];
+	    infoText.className = 'routeInfo';
+
+        routeData.appendChild(infoText);
+	});
+
+	google.maps.event.addListener(route_line, 'mouseout', function() {
      route_line.setOptions({
        strokeOpacity: 0.2,
        strokeWeight: 3
      });
-   });
+	});
 
 	// push new line
 	routes.push(route_line);
+}
+
+function displayShapeInfo(shapeId) {
+	var infoString = [];
+
+	// Pull info based on shapeId
+	var query = "SELECT 'route_id' FROM " + ftidTrips
+    + " WHERE 'shape_id'='"+shapeId+"'"
+    + " GROUP BY 'shape_id'"
+    + "LIMIT 10"; 
+
+	var encodedQuery = encodeURIComponent(query);
+
+	// Construct the URL
+	var url = ['https://www.googleapis.com/fusiontables/v1/query'];
+	url.push('?sql=' + encodedQuery);
+	url.push('&key=AIzaSyBT-Qxgp6JYWM9Hxjv5Gcd91vVtPFjsptg');
+	url.push('&callback=?');
+
+	// Send the JSONP request using jQuery
+	$.ajax({
+	  url: url.join(''),
+	  dataType: 'jsonp',
+	  success: function (data) {
+	    var rows = data['rows'];
+	    for (var i in rows) {
+	      var routeId = rows[i][0];
+	      // var headSign = rows[i][1];
+		  infoString.push(routeId);
+		  // holder.push(headSign);
+	    }
+	  }
+	});
+
+	var routeData = document.getElementById('route-data');
+
+    // Clear current info
+    $(".routeInfo").remove();
+
+    for (var i in infoString) {
+		var infoText = document.createElement('p');
+	    infoText.innerHTML = infoString[i];
+	    infoText.className = 'routeInfo';
+
+        routeData.appendChild(infoText);
+    }
 }
 
 function plotRoutes() {
@@ -459,3 +511,4 @@ function clearMap() {
 		routes[i].setMap(null);
 	}
 }
+

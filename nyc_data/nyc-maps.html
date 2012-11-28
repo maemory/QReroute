@@ -14,20 +14,6 @@
 		background-color: #FFFFFF;
 	  }
 	</style>
-	<!-- Mapping Related scripts -->
-  <script type="text/javascript"
-    src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBT-Qxgp6JYWM9Hxjv5Gcd91vVtPFjsptg&sensor=false">
-  </script>
-  <script type="text/javascript"
-	  src="http://maps.googleapis.com/maps/api/js?libraries=visualization&sensor=false">
-	</script>
-  <!-- AJAX/Fusino Table API -->
-  <script type="text/javascript"
-    src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js">
-  </script>
- 
-  <!-- Personal scripts -->
-  <script type="text/javascript" src="./nyc-shapes.js"></script>
 
   </head>
   <body onload="initialize()">
@@ -56,11 +42,16 @@
     <div class="container">
 
       <div class="row">
-        <div class="map-box" id="map_canvas" style="height: 500px"></div>
+        <div class="span12">
+          <div class="map-box" id="map_canvas" style="height: 500px"></div>
+        </div>
       </div><!--/row-->
       <br>
     	<div class="row">
 	    	<div class="span3 well">
+          <div class="progress progress-striped">
+            <div id="loadProgress" class="bar"></div>
+          </div>
 	    		<form>
   					<legend>Controls</legend>				
   					<label class="checkbox">
@@ -75,12 +66,17 @@
   				</form>
           <button class="btn" onclick="clearMap()"> Clear All</button>
 	    	</div>
-        <div class="span8 well">
-          <div id="ft-data"></div>
-          <div class="progress progress-striped">
-            <div id="loadProgress" class="bar"></div>
-          </div>
+
+        <div class="span3 well">
+          <h5>Plotted Line Info:</h5>
+          <div id="line-data"></div>
         </div>
+
+        <div class="span5">
+          <h5>Clicked Line Info:</h5>
+          <div id="route-data"></div>
+        </div>
+
       </div><!--/row-->
 		<br><hr>
 
@@ -89,23 +85,39 @@
 	    </footer>
 	</div><!--/container-->
 
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
-    <script src="../js/google-code-prettify/prettify.js"></script>
-    <script src="../js/jquery.js"></script>
-    <script src="../js/bootstrap-transition.js"></script>
+  <!-- Placed at the end of the document so the pages load faster -->
+  <!-- Mapping Related scripts -->
+  <script type="text/javascript"
+    src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBT-Qxgp6JYWM9Hxjv5Gcd91vVtPFjsptg&sensor=false">
+  </script>
+  <script type="text/javascript"
+    src="http://maps.googleapis.com/maps/api/js?libraries=visualization&sensor=false">
+  </script>
+  <!-- AJAX/Fusino Table API -->
+  <script type="text/javascript"
+    src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js">
+  </script>
+ 
+  <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+  <script src="../js/google-code-prettify/prettify.js"></script>
+  <script src="../js/jquery.js"></script>
+  <script src="../js/bootstrap-transition.js"></script>
 	<!--    <script src="../js/bootstrap-alert.js"></script> -->
-    <script src="../js/bootstrap-modal.js"></script>
-    <script src="../js/bootstrap-dropdown.js"></script>
-    <script src="../js/bootstrap-scrollspy.js"></script>
-    <script src="../js/bootstrap-tab.js"></script>
+  <script src="../js/bootstrap-modal.js"></script>
+  <script src="../js/bootstrap-dropdown.js"></script>
+  <script src="../js/bootstrap-scrollspy.js"></script>
+  <script src="../js/bootstrap-tab.js"></script>
 	<!--    <script src="../js/bootstrap-tooltip.js"></script> -->
 	<!--    <script src="../js/bootstrap-popover.js"></script> -->
 	<!--    <script src="../js/bootstrap-button.js"></script> -->
-    <script src="../js/bootstrap-collapse.js"></script>
-    <script src="../js/bootstrap-carousel.js"></script>
+  <script src="../js/bootstrap-collapse.js"></script>
+  <script src="../js/bootstrap-carousel.js"></script>
 	<!--    <script src="js/bootstrap-typeahead.js"></script> -->
     <!-- <script src="../js/application.js"></script> -->
+
+  <!-- Personal scripts -->
+  <script type="text/javascript" src="./nyc-shapes.js"></script>
+
 
   </body>
 </html>
