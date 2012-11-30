@@ -18,27 +18,6 @@
   </head>
   <body onload="initialize()">
 
- 	<!--*************** navbar ******************-->
-    <div class="navbar navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container">
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </a>
-
-          <a class="brand" href="">memory</a>
-
-          <div class="nav-collapse">
-            <ul class="nav">
-              <li class="active"><a href="">Home</a></li>
-            </ul>
-          </div><!--/.nav-collapse -->
-        </div><!--container-->
-      </div><!--/navbar-inner-->
-    </div><!--/navbar-fixed-top-->
-
     <div class="container">
 
       <div class="row">
@@ -74,7 +53,7 @@
 
         <div class="span5">
           <h5>Clicked Line Info:</h5>
-          <div id="route-data"></div>
+          <dl id="route-data" class="dl-horizontal"></dl>
         </div>
 
       </div><!--/row-->
@@ -116,8 +95,8 @@
     <!-- <script src="../js/application.js"></script> -->
 
   <!-- Personal scripts -->
-  <script type="text/javascript" src="./nyc-shapes.js"></script>
-
+  <!-- <script type="text/javascript" src="./nyc-shapes.js"></script> -->
+  <script type="text/javascript" src="./gtfs-fusion-tables.js"></script>
 
   </body>
 </html>
