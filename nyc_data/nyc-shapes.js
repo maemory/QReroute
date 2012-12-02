@@ -1,181 +1,87 @@
 /* ========================================================
- * Mike Emory maps related java script methods
+ * NYC MTA Subway maps related javascript methods
  * ======================================================== */
-// google.load('visualization', '1.0', {'packages':['corechart','table']});
 
-var ftidShapes = '1i2RNtijNTRAaoFMjbUX1wMo3smc2nQkAsCRfPBk';
-var ftidTrips = '1I_yESx3I_Xet3JEM2l0DWHj76cu_gsx7vw2YYXM';
-var ftidStops = '17Y_13i04CsvoEVpm7qgQ4SpxJbl8K9c4u1vyVo0';
-var ftidStopTimes = '1WwkY8qCCEcUTJ-bw0-gRhn3KQ6d0cNsZ4-DCnxo';
+// Global Variables
+var map;						// The map
+var transitLayer,fusion_dat;	// google maps data overlays
+var markers = [];				// array to hold markers
+var routes = [];				// array to hold polylines
+var services = [];				// array to hold services
 
-var map;
-var transitLayer,fusion_dat;
-var markers = [];
-var routes = [];
 
 function initialize() {
-
-	var styles = [
-	  {
-	    "featureType": "landscape.man_made",
-	    "elementType": "geometry",
-	    "stylers": [
-	      { "weight": 0.1 },
-	      { "color": "#808080" },
-	      { "lightness": 55 }
-	    ]
-	  },{
-	    "featureType": "road.arterial",
-	    "elementType": "geometry",
-	    "stylers": [
-	      { "color": "#808080" },
-	      { "lightness": 100 },
-	      { "weight": 0.5 }
-	    ]
-	  },{
-	    "featureType": "road.arterial",
-	    "elementType": "labels.text.stroke",
-	    "stylers": [
-	      { "color": "#808080" },
-	      { "lightness": 100 }
-	    ]
-	  },{
-	    "featureType": "road.highway",
-	    "elementType": "geometry.fill",
-	    "stylers": [
-	      { "color": "#808080" },
-	      { "weight": 1.5 }
-	    ]
-	  },{
-	    "featureType": "road.highway",
-	    "elementType": "geometry.stroke",
-	    "stylers": [
-	      { "color": "#808080" },
-	      { "lightness": 50 },
-	      { "weight": 0.5 }
-	    ]
-	  },{
-	    "featureType": "road.highway",
-	    "elementType": "labels.text.stroke",
-	    "stylers": [
-	      { "color": "#808080" },
-	      { "weight": 4 }
-	    ]
-	  },{
-	    "featureType": "road.highway",
-	    "elementType": "labels.text.fill",
-	    "stylers": [
-	      { "color": "#808080" },
-	      { "lightness": 100 }
-	    ]
-	  },{
-	    "featureType": "water",
-	    "elementType": "geometry.fill",
-	    "stylers": [
-	      { "hue": "#00fff7" },
-	      { "lightness": 40 }
-	    ]
-	  },{
-	    "featureType": "poi.park",
-	    "elementType": "geometry.fill",
-	    "stylers": [
-	      { "hue": "#00ff19" },
-	      { "lightness": -10 }
-	    ]
-	  },{
-	  }
-	];
-
-	var styledMap = new google.maps.StyledMapType(styles, {name: "Memory"});
-
 	var newYork = new google.maps.LatLng(40.753357,-73.984375);
 
 	var mapOptions = {
 	  center: newYork,
 	  zoom: 12,
-	  mapTypeControlStyle: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
 	  streetViewControl: false,
 	  panControl: false,
-	  mapTypeControlOptions: {
-	  	mapTypeIds: [google.maps.MapTypeId.HYBRID, 'mike_style']
-	  },
+	  mapTypeId: google.maps.MapTypeId.HYBRID,
 	};
 
 	map = new google.maps.Map(document.getElementById("map_canvas"),mapOptions);
 
-	//Associate the styled map with the MapTypeId and set it to display.
-	map.mapTypes.set('mike_style', styledMap);
-	map.setMapTypeId('mike_style');
-
 	transitLayer = new google.maps.TransitLayer();
 
-	// populate list of routes
+	// populate dropdown list
 	uniqueServiceId();
+	// uniqueShapeId();
+	// uniqueTripId();
 }
 
-function uniqueShapes() {
+function uniqueShapeId() {
 	var query = "SELECT 'shape_id' FROM " + ftidTrips
 	     + " GROUP BY 'shape_id'"
 	     + " LIMIT 10"; 
 
-	var encodedQuery = encodeURIComponent(query);
+	queryTable(query,'jsonp',success);
 
-	// Construct the URL
-	var url = ['https://www.googleapis.com/fusiontables/v1/query'];
-	url.push('?sql=' + encodedQuery);
-	url.push('&key=AIzaSyBT-Qxgp6JYWM9Hxjv5Gcd91vVtPFjsptg');
-	url.push('&callback=?');
+	function success(data) {
+		var rows = data['rows'];
+		if (rows === null) {
+			alert('No data received');
+		} else {
+			var ftData = document.getElementById('shape-select');
 
-	// Send the JSONP request using jQuery
-	$.ajax({
-	  url: url.join(''),
-	  dataType: 'jsonp',
-	  success: function (data) {
-	    var rows = data['rows'];
-	    var ftData = document.getElementById('shape-select');
-	    for (var i in rows) {
-	      var route = rows[i][0];
-	      var routeElement = document.createElement('option');
-	      routeElement.innerHTML = route;
-	      routeElement.className = 'route-disp';
+		    for (var i in rows) {
+		      var route = rows[i][0];
 
-          ftData.appendChild(routeElement);
-	    }
-	  }
-	});
+		      if (route.length > 0) {
+			      var selectElement = document.createElement('option');
+			      selectElement.innerHTML = route;
+			      selectElement.className = 'select-disp';
+
+		          ftData.appendChild(selectElement);
+		      }
+		    }
+		}
+	};
 }
 
 function uniqueTripId() {
 	var query = "SELECT 'trip_id' FROM " + ftidStopTimes
 	     + " GROUP BY 'trip_id'"
-	     + " ORDER BY 'arrival_time'"
 	     + " LIMIT 5"; 
 
-	var encodedQuery = encodeURIComponent(query);
+	queryTable(query,'jsonp',success);
 
-	// Construct the URL
-	var url = ['https://www.googleapis.com/fusiontables/v1/query'];
-	url.push('?sql=' + encodedQuery);
-	url.push('&key=AIzaSyBT-Qxgp6JYWM9Hxjv5Gcd91vVtPFjsptg');
-	url.push('&callback=?');
-
-	// Send the JSONP request using jQuery
-	$.ajax({
-	  url: url.join(''),
-	  dataType: 'jsonp',
-	  success: function (data) {
+	function success(data) {
 	    var rows = data['rows'];
 	    var ftData = document.getElementById('shape-select');
 	    for (var i in rows) {
 	      var trip = rows[i][0];
-	      var tripElement = document.createElement('option');
-	      tripElement.innerHTML = trip;
-	      tripElement.className = 'trip-disp';
 
-          ftData.appendChild(tripElement);
+	      if (trip.length > 0) {
+		      var selectElement = document.createElement('option');
+		      selectElement.innerHTML = trip;
+		      selectElement.className = 'select-disp';
+
+	          ftData.appendChild(selectElement);
+	      }
 	    }
-	  }
-	});
+	}
 }
 
 function uniqueServiceId() {
@@ -183,34 +89,29 @@ function uniqueServiceId() {
 	     + " GROUP BY 'service_id'"
 	     + " LIMIT 50"; 
 
-	var encodedQuery = encodeURIComponent(query);
+	queryTable(query,'jsonp',successServiceId);
 
-	// Construct the URL
-	var url = ['https://www.googleapis.com/fusiontables/v1/query'];
-	url.push('?sql=' + encodedQuery);
-	url.push('&key=AIzaSyBT-Qxgp6JYWM9Hxjv5Gcd91vVtPFjsptg');
-	url.push('&callback=?');
-
-	// Send the JSONP request using jQuery
-	$.ajax({
-	  url: url.join(''),
-	  dataType: 'jsonp',
-	  success: function (data) {
+	function successServiceId(data) {
 	    var rows = data['rows'];
 	    var ftData = document.getElementById('shape-select');
 	    for (var i in rows) {
-	      var trip = rows[i][0];
-	      var tripElement = document.createElement('option');
-	      tripElement.innerHTML = trip;
-	      tripElement.className = 'trip-disp';
+	      var service = rows[i][0];
 
-          ftData.appendChild(tripElement);
+		    if (service.length > 0) {
+		      var selectElement = document.createElement('option');
+		      selectElement.innerHTML = service;
+		      selectElement.className = 'select-disp';
+
+	          ftData.appendChild(selectElement);
+		    }
 	    }
-	  }
-	});
+	}
 }
 
 function getShapeIdFromServiceId() {
+
+	clearPolylines(routes);
+	cleanPolylines(routes);
 
 	// get input from select statement
 	var selectInput = document.getElementById("shape-select");
@@ -222,19 +123,9 @@ function getShapeIdFromServiceId() {
 		+ " ORDER BY 'shape_id'"
 	    + " LIMIT 100"; 
 
-	var encodedQuery = encodeURIComponent(query);
+	queryTable(query,'jsonp',successShape);
 
-	// Construct the URL
-	var url = ['https://www.googleapis.com/fusiontables/v1/query'];
-	url.push('?sql=' + encodedQuery);
-	url.push('&key=AIzaSyBT-Qxgp6JYWM9Hxjv5Gcd91vVtPFjsptg');
-	url.push('&callback=?');
-
-	// Send the JSONP request using jQuery
-	$.ajax({
-	  url: url.join(''),
-	  dataType: 'jsonp',
-	  success: function (data) {
+	function successShape(data) {
 	    var rows = data['rows'];
 
 	    var count = 1;
@@ -256,14 +147,21 @@ function getShapeIdFromServiceId() {
 		    addPolyline(shapeId);
 	  	    count++;
   	      }
+
+  	      var percentage = 100 * i / (rows.length-1);
+	      setPercentage("loadProgress", percentage);
 	    }
 
-	    plotRoutes();
-	  }
-	});
+	    plotPolylines(routes,map);
+	    setPercentage("loadProgress", 0);
+	}
 }
 
 function getShapeIdFromTripId() {
+
+	clearPolylines(routes);
+	cleanPolylines(routes);
+
 	// get input from select statement
 	var selectInput = document.getElementById("shape-select");
 	var tripId = selectInput.options[selectInput.selectedIndex].text;
@@ -272,35 +170,38 @@ function getShapeIdFromTripId() {
 		+ " WHERE 'trip_id'='"+tripId+"'"
 	     + "LIMIT 1"; 
 
-	var encodedQuery = encodeURIComponent(query);
+	queryTable(query,'jsonp',success);
 
-	// Construct the URL
-	var url = ['https://www.googleapis.com/fusiontables/v1/query'];
-	url.push('?sql=' + encodedQuery);
-	url.push('&key=AIzaSyBT-Qxgp6JYWM9Hxjv5Gcd91vVtPFjsptg');
-	url.push('&callback=?');
-
-	// Reset routes holder
-	clearMap();
-	routes.clear();
-
-	// Send the JSONP request using jQuery
-	$.ajax({
-	  url: url.join(''),
-	  dataType: 'jsonp',
-	  success: function (data) {
+	function success(data) {
 	    var rows = data['rows'];
+
+	    var count = 1;
+	    var ftData = document.getElementById('line-data');
+
+	    // Clear current info
+	    $(".shape-disp").remove();
+
 	    for (var i in rows) {
 	      var shapeId = rows[i][0];
 
-	      routes=addPolyline(shapeId);
+	      if (shapeId.length > 0) {
+		    var shapeElement = document.createElement('p');
+		    shapeElement.innerHTML = 'Line #' + count + ': ' + shapeId;
+		    shapeElement.className = 'shape-disp';
 
-	      setPercentage("loadProgress", 50);
+	        ftData.appendChild(shapeElement);
+
+		    addPolyline(shapeId);
+	  	    count++;
+  	      }
+
+  	      var percentage = 100 * i / (rows.length-1);
+	      setPercentage("loadProgress", percentage);
 	    }
-	  }
-	});
 
-	plotRoutes(routes);
+	    plotPolylines(routes,map);
+	    setPercentage("loadProgress", 0);
+	}
 }
 
 function addPolyline(shapeId) {
@@ -320,115 +221,86 @@ function addPolyline(shapeId) {
 	    + " ORDER BY 'shape_pt_sequence'"
 	    + "LIMIT 5000"; 
 
-	var encodedQuery = encodeURIComponent(query);
+	queryTable(query,'jsonp',success);
 
-	// Construct the URL
-	var url = ['https://www.googleapis.com/fusiontables/v1/query'];
-	url.push('?sql=' + encodedQuery);
-	url.push('&key=AIzaSyBT-Qxgp6JYWM9Hxjv5Gcd91vVtPFjsptg');
-	url.push('&callback=?');
-
-	// Send the JSONP request using jQuery
-	$.ajax({
-	  url: url.join(''),
-	  dataType: 'jsonp',
-	  success: function (data) {
+	function success(data) {
 	    var rows = data['rows'];
 	    var ftData = document.getElementById('ft-data');
 	    for (var i in rows) {
 	      var lat_i = rows[i][0];
 	      var long_i = rows[i][1];
 
-	      var next_loc = new google.maps.LatLng(lat_i,long_i);
-
-		  path.push(next_loc);
+		  path.push(new google.maps.LatLng(lat_i,long_i));
 	    }
-	  }
-	});
+	}
 
 	// specify interactivity of polyline
 
-	google.maps.event.addListener(route_line, 'mouseover', function(event) {
-     route_line.setOptions({
-       strokeOpacity: 1,
-       strokeWeight: 4
-     });
+	google.maps.event.addListener(route_line, 'mouseover', function() {
+	    route_line.setOptions({
+	       strokeOpacity: 1,
+	       strokeWeight: 4
+	    });
     });
 
-	google.maps.event.addListener(route_line, 'click',  function(event) {
-		// displayShapeInfo(shapeId);
-		var routeData = document.getElementById('route-data');
-
-	    // Clear current info
-	    $(".routeInfo").remove();
-
-		var infoText = document.createElement('p');
-	    infoText.innerHTML = "Route: " + shapeId[0];
-	    infoText.className = 'routeInfo';
-
-        routeData.appendChild(infoText);
+	google.maps.event.addListener(route_line, 'mouseout', function() {
+	    route_line.setOptions({
+	       strokeOpacity: 0.2,
+	       strokeWeight: 3
+	    });
 	});
 
-	google.maps.event.addListener(route_line, 'mouseout', function() {
-     route_line.setOptions({
-       strokeOpacity: 0.2,
-       strokeWeight: 3
-     });
+	google.maps.event.addListener(route_line, 'click',  function(event) {
+		dispShapeIdInfo(shapeId);
 	});
 
 	// push new line
 	routes.push(route_line);
 }
 
-function displayShapeInfo(shapeId) {
-	var infoString = [];
-
+function dispShapeIdInfo(shapeId) {
 	// Pull info based on shapeId
 	var query = "SELECT 'route_id' FROM " + ftidTrips
-    + " WHERE 'shape_id'='"+shapeId+"'"
-    + " GROUP BY 'shape_id'"
-    + "LIMIT 10"; 
+	    + " WHERE 'shape_id'='"+shapeId+"'"
+	    + " GROUP BY 'route_id'"
+	    + "LIMIT 1"; 
 
-	var encodedQuery = encodeURIComponent(query);
+	queryTable(query,'jsonp',success);
 
-	// Construct the URL
-	var url = ['https://www.googleapis.com/fusiontables/v1/query'];
-	url.push('?sql=' + encodedQuery);
-	url.push('&key=AIzaSyBT-Qxgp6JYWM9Hxjv5Gcd91vVtPFjsptg');
-	url.push('&callback=?');
+	function success(data) {
+		var routeData = document.getElementById('route-data');
 
-	// Send the JSONP request using jQuery
-	$.ajax({
-	  url: url.join(''),
-	  dataType: 'jsonp',
-	  success: function (data) {
+	    // Clear current info
+	    $(".routeInfo").remove();
+
 	    var rows = data['rows'];
-	    for (var i in rows) {
-	      var routeId = rows[i][0];
-	      // var headSign = rows[i][1];
-		  infoString.push(routeId);
-		  // holder.push(headSign);
+
+	    for (i in rows) {
+	    	addDlListItems('Route',rows[i][0],'routeInfo',routeData);
 	    }
-	  }
-	});
 
-	var routeData = document.getElementById('route-data');
-
-    // Clear current info
-    $(".routeInfo").remove();
-
-    for (var i in infoString) {
-		var infoText = document.createElement('p');
-	    infoText.innerHTML = infoString[i];
-	    infoText.className = 'routeInfo';
-
-        routeData.appendChild(infoText);
-    }
+	    dispRouteInfo(rows[i][0]);
+	}
 }
 
-function plotRoutes() {
-	for (var i in routes) {
-		routes[i].setMap(map);
+function dispRouteInfo(routeId) {
+	// Pull info based on routeId
+	var query = "SELECT 'route_long_name','route_desc','route_url' FROM " + ftidRoutes
+	    + " WHERE 'route_id'='"+routeId+"'"
+	    + "LIMIT 1"; 
+
+	queryTable(query,'jsonp',success);
+
+	function success(data) {
+		var routeData = document.getElementById('route-data');
+
+	    var rows = data['rows'];
+
+	    for (i in rows) {
+	    	addDlListItems('Name',rows[i][0],'routeInfo',routeData);
+	    	addDlListItems('Description',rows[i][1],'routeInfo',routeData);
+	    	addDlListItems('More Info',rows[i][2],'routeInfo',routeData,'link');
+	    }
 	}
 }
 
@@ -485,30 +357,6 @@ function routeColor(shapeId) {
 	}
 }
 
-function setPercentage(id, percent) {
-	var div = document.getElementById(id);
-	div.style.width = percent + '%';
-}
-
-
 function toggleTransit() {
 	transitLayer.setMap(transitLayer.getMap() ? null : map);
 }
-
-function toggleRoutes() {
-	route_line.setMap(route_line.getMap() ? null : map);
-}
-
-function toggleAllRoutes() {
-	clearMap();
-	for (var i in routes) {
-		routes[i].setMap(map);
-	}
-}
-
-function clearMap() {
-	for (var i in routes) {
-		routes[i].setMap(null);
-	}
-}
-
