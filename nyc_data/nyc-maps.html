@@ -24,6 +24,10 @@
         <div class="span12">
           <div class="map-box" id="map_canvas" style="height: 500px"></div>
         </div>
+        <div class="span12">
+          <h5>Clicked Line Info:</h5>
+          <dl id="route-data" class="dl-horizontal"></dl>
+        </div>
       </div><!--/row-->
       <br>
     	<div class="row">
@@ -36,21 +40,16 @@
   					<label class="checkbox">
   					    <input type="checkbox" onchange="toggleTransit()"> Transit
   					</label>
-            <select id="shape-select" onchange="getShapeIdFromServiceId()">
+            <select id="shape-select" onchange="getShapeIdFromRouteId()">
               <option>Select a route:</option>
             </select>
   				</form>
-          <button class="btn" onclick="clearMap()"> Clear All</button>
+          <button class="btn" onclick="clearPolylines(routes),clearPolylines(backgroundRoutes)"> Clear All</button>
 	    	</div>
 
         <div class="span3 well">
           <h5>Plotted Line Info:</h5>
           <div id="line-data"></div>
-        </div>
-
-        <div class="span5">
-          <h5>Clicked Line Info:</h5>
-          <dl id="route-data" class="dl-horizontal"></dl>
         </div>
 
       </div><!--/row-->

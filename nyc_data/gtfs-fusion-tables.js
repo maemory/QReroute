@@ -10,7 +10,7 @@ var ftidTrips     = '1I_yESx3I_Xet3JEM2l0DWHj76cu_gsx7vw2YYXM';
 var ftidStops     = '17Y_13i04CsvoEVpm7qgQ4SpxJbl8K9c4u1vyVo0';
 var ftidStopTimes = '1WwkY8qCCEcUTJ-bw0-gRhn3KQ6d0cNsZ4-DCnxo';
 var ftidRoutes    = '1nWHP5FJs_aPvCPDYYkG0GHHojbkvZDdjcnjoTfw';
-var ftidCalendar  = '1wetKxVGhNZKw0P294iWNvkRGkZTTaOypDWi9b34'
+var ftidCalendar  = '1wetKxVGhNZKw0P294iWNvkRGkZTTaOypDWi9b34';
 
 
 var apikey = 'AIzaSyBT-Qxgp6JYWM9Hxjv5Gcd91vVtPFjsptg';
@@ -30,10 +30,15 @@ function queryTable(queryString,dataType,successFunc) {
 	  url: url.join(''),
 	  dataType: dataType,
 	  success: successFunc,
-	  error: function (textStatus) {
-	  	console.log('Error in SQL request: ' + textStatus);
-	  },
+	  error: queryError,
 	});
+}
+
+function queryError(jqXHR,textStatus,errorThrown) {
+	console.log('Error in SQL request: ' + textStatus);
+	if (errorThrown) {
+		console.log('Error thrown: ' + errorThrown);
+	}
 }
 
 function addDlListItems(title,text,target_class,target,type) {
@@ -58,9 +63,15 @@ function addDlListItems(title,text,target_class,target,type) {
 
 }
 
-function plotPolylines(polyArray,targetMap) {
+function plotPolylines(polyArray,targetMap,backgroundPolyArray) {
 	if (targetMap != null) {
 		map = targetMap;
+	}
+
+	if (backgroundPolyArray) {
+		for (var i in backgroundPolyArray) {
+			backgroundPolyArray[i].setMap(map);
+		}
 	}
 
 	for (var i in polyArray) {

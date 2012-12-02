@@ -7,6 +7,7 @@ var map;						// The map
 var transitLayer,fusion_dat;	// google maps data overlays
 var markers = [];				// array to hold markers
 var routes = [];				// array to hold polylines
+var backgroundRoutes = [];		// array to hold polylines
 var services = [];				// array to hold services
 
 
@@ -26,9 +27,34 @@ function initialize() {
 	transitLayer = new google.maps.TransitLayer();
 
 	// populate dropdown list
-	uniqueServiceId();
+	// uniqueServiceId();
 	// uniqueShapeId();
 	// uniqueTripId();
+	uniqueRouteId();
+}
+
+function uniqueRouteId() {
+	var query = "SELECT 'route_id' FROM " + ftidRoutes
+	     + " GROUP BY 'route_id'"
+	     + " LIMIT 50"; 
+
+	queryTable(query,'jsonp',success);
+
+	function success(data) {
+	    var rows = data['rows'];
+	    var ftData = document.getElementById('shape-select');
+	    for (var i in rows) {
+	      var trip = rows[i][0];
+
+	      if (trip.length > 0) {
+		      var selectElement = document.createElement('option');
+		      selectElement.innerHTML = trip;
+		      selectElement.className = 'select-disp';
+
+	          ftData.appendChild(selectElement);
+	      }
+	    }
+	}
 }
 
 function uniqueShapeId() {
@@ -107,6 +133,58 @@ function uniqueServiceId() {
 	    }
 	}
 }
+
+function getShapeIdFromRouteId() {
+
+	clearPolylines(routes);
+	cleanPolylines(routes);
+	clearPolylines(backgroundRoutes);
+	cleanPolylines(backgroundRoutes);
+
+	// get input from select statement
+	var selectInput = document.getElementById("shape-select");
+	var routeId = selectInput.options[selectInput.selectedIndex].text;
+
+	var query = "SELECT 'shape_id' FROM " + ftidTrips
+		+ " WHERE 'route_id'='"+routeId+"'"
+		+ " GROUP BY 'shape_id'"
+	    + " LIMIT 100"; 
+
+	queryTable(query,'jsonp',successShape);
+
+	function successShape(data) {
+
+	    var rows = data['rows'];
+
+	    var count = 1;
+	    var ftData = document.getElementById('line-data');
+
+	    // Clear current info
+	    $(".shape-disp").remove();
+
+	    for (var i in rows) {
+	      var shapeId = rows[i][0];
+
+	      if (shapeId.length > 0) {
+		    var shapeElement = document.createElement('p');
+		    shapeElement.innerHTML = 'Polyine #' + count + ': ' + shapeId;
+		    shapeElement.className = 'shape-disp';
+
+	        ftData.appendChild(shapeElement);
+
+		    addPolyline(shapeId);
+	  	    count++;
+  	      }
+
+  	      var percentage = 100 * i / (rows.length-1);
+	      setPercentage("loadProgress", percentage);
+	    }
+
+	    plotPolylines(routes,map,backgroundRoutes);
+	    setPercentage("loadProgress", 0);
+	}
+}
+
 
 function getShapeIdFromServiceId() {
 
@@ -208,12 +286,20 @@ function addPolyline(shapeId) {
 
 	var polyOptions = {
 	    strokeColor: routeColor(shapeId),
-	    strokeOpacity: 0.2,
-	    strokeWeight: 3,
+	    strokeOpacity: 1.0,
+	    strokeWeight: 2,
 	}
 
+	var polyBackOptions = {
+	    strokeColor: '#FFFFFF',
+	    strokeOpacity: 1.0,
+	    strokeWeight: 4,
+	}
+
+	var backgroundLine = new google.maps.Polyline(polyBackOptions);
 	var route_line = new google.maps.Polyline(polyOptions);
 
+	var backgroundPath = backgroundLine.getPath();
 	var path = route_line.getPath();
 
 	var query = "SELECT 'shape_pt_lat','shape_pt_lon' FROM " + ftidShapes
@@ -231,6 +317,7 @@ function addPolyline(shapeId) {
 	      var long_i = rows[i][1];
 
 		  path.push(new google.maps.LatLng(lat_i,long_i));
+		  backgroundPath.push(new google.maps.LatLng(lat_i,long_i));
 	    }
 	}
 
@@ -238,15 +325,15 @@ function addPolyline(shapeId) {
 
 	google.maps.event.addListener(route_line, 'mouseover', function() {
 	    route_line.setOptions({
-	       strokeOpacity: 1,
-	       strokeWeight: 4
+	       // strokeOpacity: 1,
+	       strokeWeight: 3.5
 	    });
     });
 
 	google.maps.event.addListener(route_line, 'mouseout', function() {
 	    route_line.setOptions({
-	       strokeOpacity: 0.2,
-	       strokeWeight: 3
+	       // strokeOpacity: 0.2,
+	       strokeWeight: 2
 	    });
 	});
 
@@ -255,6 +342,7 @@ function addPolyline(shapeId) {
 	});
 
 	// push new line
+	backgroundRoutes.push(backgroundLine);
 	routes.push(route_line);
 }
 
