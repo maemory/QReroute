@@ -22,8 +22,10 @@
               <option class="sel-city">select city</option>
               <option data-set="MTA">New York (MTA)</option>
               <option data-set="SFMTA">San Francisco (SFMTA)</option>
-<!--               <option data-set="CTA">Chicago (CTA)</option> -->
-             </select>
+              <option data-set="WMATA">Washington, D.C. (SFMTA)</option>
+              <!-- <option data-set="BART">BART (S.F.)</option> -->
+              <option data-set="CTA">Chicago (CTA)</option>
+            </select>
 
             <select id="day-select" onchange="setDay(),setServiceId()" style="width: 110px;">
               <option>Monday</option>
@@ -45,11 +47,11 @@
       </div>
     </div>
 
-    <div class="map-box" id="map_canvas" style="height: 600px"></div>
+    <div class="map-box" id="map_canvas" style="height: 700px;"></div>
 
     <div id="info-window">
       <div class="container">
-        <div id="route-window" class="span8 pull-right">
+        <div id="route-window" class="span8 pull-right well">
           <dl id="route-data" class="dl-horizontal"></dl>
         </div>
       </div>
