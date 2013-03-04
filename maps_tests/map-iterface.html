@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+
+    <link href="../css/bootstrap.css" rel="stylesheet">
+<!--     <link href="../css/responsive.css" rel="stylesheet"> -->
+     <link href="../css/maps-interface.css" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <div class="navbar-wrapper">
+      <div class="container">
+        <div class="navbar">
+          <div class="navbar-inner">
+            <p class="brand">GTFS-FT Reader</p>
+            
+            <form class="navbar-form form-inline">
+            <select id="data-select" onchange="setDataSet(),initializeMap(),clearRouteInfo(),clearHeadingSelect()">
+              <option class="sel-city">select city</option>
+              <option data-set="MTA">New York (MTA)</option>
+              <option data-set="SFMTA">San Francisco (SFMTA)</option>
+<!--               <option data-set="CTA">Chicago (CTA)</option> -->
+             </select>
+
+            <select id="day-select" onchange="setDay(),setServiceId()" style="width: 110px;">
+              <option>Monday</option>
+              <option>Tuesday</option>
+              <option>Wednesday</option>
+              <option>Thursday</option>
+              <option>Friday</option>
+              <option>Saturday</option>
+              <option>Sunday</option>
+            </select>
+
+            <select id="route-select" onchange="setRouteId(),setServiceId()" class="input" style="width: 120px;">
+            </select>
+
+            <select id="heading-select" onchange="setShapeId(),plotShapeId()" class="input-xlarge">
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="map-box" id="map_canvas" style="height: 600px"></div>
+
+    <div id="info-window">
+      <div class="container">
+        <div id="route-window" class="span8 pull-right">
+          <dl id="route-data" class="dl-horizontal"></dl>
+        </div>
+      </div>
+    </div>
+
+  <div class="container">
+	    <footer>
+		    <p>&copy; Michael Emory 2013</p>
+	    </footer>
+	</div><!--/container-->
+
+  <!-- Placed at the end of the document so the pages load faster -->
+  <!-- Mapping Related scripts -->
+  <script type="text/javascript"
+    src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBT-Qxgp6JYWM9Hxjv5Gcd91vVtPFjsptg&sensor=false">
+  </script>
+<!--  <script type="text/javascript"
+     src="http://maps.googleapis.com/maps/api/js?libraries=visualization&sensor=false">
+  </script> -->
+  <!-- AJAX/Fusino Table API -->
+  <script type="text/javascript"
+    src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js">
+  </script>
+ 
+  <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+  <script src="../js/google-code-prettify/prettify.js"></script>
+  <script src="../js/jquery.js"></script>
+  <script src="../js/jquery-1.7.1.min.js"></script>
+  <script src="../js/bootstrap-transition.js"></script>
+  <script src="../js/bootstrap-alert.js"></script>
+  <script src="../js/bootstrap-modal.js"></script>
+  <script src="../js/bootstrap-dropdown.js"></script>
+  <script src="../js/bootstrap-scrollspy.js"></script>
+  <script src="../js/bootstrap-tab.js"></script>
+  <script src="../js/bootstrap-tooltip.js"></script>
+  <script src="../js/bootstrap-popover.js"></script>
+  <script src="../js/bootstrap-button.js"></script>
+  <script src="../js/bootstrap-collapse.js"></script>
+  <script src="../js/bootstrap-carousel.js"></script>
+	<script src="../js/bootstrap-typeahead.js"></script>
+  <script src="../js/application.js"></script>
+
+  <!-- Personal scripts -->
+  <script type="text/javascript" src="./gtfs-fusion-tables.js"></script>
+  <script type="text/javascript" src="./ft-maps.js"></script>
+
+  </body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+
+    <link href="../css/bootstrap.css" rel="stylesheet">
+<!--     <link href="../css/responsive.css" rel="stylesheet"> -->
+ <!--     <link href="../css/maps-site.css" rel="stylesheet"> -->
+  </head>
+
+  <body style="margin-top: 10px;">
+
+    <div class="container">
+
+      <div class="row">
+
+        <div class="span8">
+          <div class="map-box" id="map_canvas" style="height: 600px"></div>
+        </div>
+
+        <div class="span4">
+
+          <p>progress bar:</p>
+          <div class="progress progress-striped">
+            <div id="loadProgress" class="bar"></div>
+          </div>
+
+          <form>
+            <legend>Controls</legend>       
+            <label class="checkbox">
+                <input type="checkbox" onchange="toggleTransit()"> Transit Overlay</input>
+            </label>
+
+            <h4>Select City:</h4>
+            <select multiple="multiple" id="data-select" onchange="setDataSet(),initializeMap(),clearRouteInfo(),clearHeadingSelect()">
+              <option>New York (MTA)</option>
+              <option>San Francisco (SFMTA)</option>
+<!--               <option>Chicago (CTA)</option> -->
+            </select>
+
+            <h4>select route:</h4>
+            <select multiple="multiple" id="route-select" onchange="setRouteId(),setServiceId()" class="input">
+            </select>
+
+            <h4>heading towards:</h4>
+            <select multiple="multiple" id="heading-select" onchange="setShapeId()" class="input-xlarge">
+            </select>
+
+            <select id="day-select" onchange="setDay(),setServiceId()">
+              <option>Monday</option>
+              <option>Tuesday</option>
+              <option>Wednesday</option>
+              <option>Thursday</option>
+              <option>Friday</option>
+              <option>Saturday</option>
+              <option>Sunday</option>
+            </select>
+
+          </form>
+          <button class="btn" onclick="clearPolylines(routes),clearPolylines(backgroundRoutes)"> Clear All Polylines</button>
+          <button class="btn" onclick="plotShapeId()">Plot Selected Route</button>
+          <button class="btn" onclick="printGlobals()">Print to Console</button>          
+        </div>
+
+        <div class="span4">
+          <h5>Clicked Line Info:</h5>
+          <dl id="route-data" class="dl-horizontal"></dl>
+        </div>
+      </div><!--/row-->
+      <br>
+    	<div class="row">
+	    	
+
+        <div class="span3 well">
+          <h5>Plotted Line Info:</h5>
+          <div id="line-data"></div>
+        </div>
+
+      </div><!--/row-->
+		<br><hr>
+
+	    <footer>
+		    <p>&copy; Michael Emory 2012</p>
+	    </footer>
+	</div><!--/container-->
+
+  <!-- Placed at the end of the document so the pages load faster -->
+  <!-- Mapping Related scripts -->
+  <script type="text/javascript"
+    src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBT-Qxgp6JYWM9Hxjv5Gcd91vVtPFjsptg&sensor=false">
+  </script>
+<!--  <script type="text/javascript"
+     src="http://maps.googleapis.com/maps/api/js?libraries=visualization&sensor=false">
+  </script> -->
+  <!-- AJAX/Fusino Table API -->
+  <script type="text/javascript"
+    src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js">
+  </script>
+ 
+  <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+  <script src="../js/google-code-prettify/prettify.js"></script>
+  <script src="../js/jquery.js"></script>
+  <script src="../js/bootstrap-transition.js"></script>
+  <script src="../js/bootstrap-alert.js"></script>
+  <script src="../js/bootstrap-modal.js"></script>
+  <script src="../js/bootstrap-dropdown.js"></script>
+  <script src="../js/bootstrap-scrollspy.js"></script>
+  <script src="../js/bootstrap-tab.js"></script>
+  <script src="../js/bootstrap-tooltip.js"></script>
+  <script src="../js/bootstrap-popover.js"></script>
+  <script src="../js/bootstrap-button.js"></script>
+  <script src="../js/bootstrap-collapse.js"></script>
+  <script src="../js/bootstrap-carousel.js"></script>
+	<script src="../js/bootstrap-typeahead.js"></script>
+  <script src="../js/application.js"></script>
+
+  <!-- Personal scripts -->
+  <script type="text/javascript" src="./gtfs-fusion-tables.js"></script>
+  <script type="text/javascript" src="./nyc-v2.js"></script>
+
+  </body>
+</html>
