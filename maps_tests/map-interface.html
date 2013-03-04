@@ -15,19 +15,22 @@
       <div class="container">
         <div class="navbar">
           <div class="navbar-inner">
-            <p class="brand">GTFS-FT Reader</p>
+            <a class="brand" href="http://www.stanford.edu/~memory">memory</a>
             
             <form class="navbar-form form-inline">
-            <select id="data-select" onchange="setDataSet(),initializeMap(),clearRouteInfo(),clearHeadingSelect()">
-              <option class="sel-city">select city</option>
-              <option data-set="MTA">New York (MTA)</option>
-              <option data-set="SFMTA">San Francisco (SFMTA)</option>
-              <option data-set="WMATA">Washington, D.C. (SFMTA)</option>
+            <select id="data-select" onchange="setDataSet(),initializeMap(),clearRouteInfo(),clearHeadingSelect()" class="input-xlarge">
+              <option class="sel-city">select dataset</option>
+              <option data-set="MTA">MTA (New York)</option>
+              <option data-set="SFMTA">SFMTA (San Francisco)</option>
+              <option data-set="WMATA">WMATA (Washington, D.C.)</option>
               <!-- <option data-set="BART">BART (S.F.)</option> -->
-              <option data-set="CTA">Chicago (CTA)</option>
+              <option data-set="CTA">CTA (Chicago)</option>
             </select>
 
-            <select id="day-select" onchange="setDay(),setServiceId()" style="width: 110px;">
+            <select id="route-select" onchange="setRouteId(),setServiceId()" class="input input-xxlarge" style="display: none;">
+            </select>
+
+            <select id="day-select" onchange="setDay(),setServiceId()" style="width: 110px; display: none;">
               <option>Monday</option>
               <option>Tuesday</option>
               <option>Wednesday</option>
@@ -37,10 +40,7 @@
               <option>Sunday</option>
             </select>
 
-            <select id="route-select" onchange="setRouteId(),setServiceId()" class="input" style="width: 120px;">
-            </select>
-
-            <select id="heading-select" onchange="setShapeId(),plotShapeId()" class="input-xlarge">
+            <select id="heading-select" onchange="setShapeId(),plotShapeId()" class="input-xlarge" style="display: none;">
             </select>
           </div>
         </div>
@@ -49,9 +49,19 @@
 
     <div class="map-box" id="map_canvas" style="height: 700px;"></div>
 
+    <div id="init-text">
+      <div class="container">
+        <div class="span6 offset3">
+          <h4>GTFS/Fusion Table Transit Plotter</h4>
+          <p style='text-align: justify;'>This page allows you to explore different GTFS data-sets, where each individual table has been loaded as a separate Google Fusion Table. The current capability allows you to plot the path of a particular service trip.</p>
+          <p>Get started by selecting a city from the menu above.</p>
+        </div>
+      </div>
+    </div>
+
     <div id="info-window">
       <div class="container">
-        <div id="route-window" class="span8 pull-right well">
+        <div id="route-window" class="span12 well">
           <dl id="route-data" class="dl-horizontal"></dl>
         </div>
       </div>

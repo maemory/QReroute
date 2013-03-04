@@ -28,3 +28,12 @@
   background-color: #000000;
   color: #ffffff;
 }
+
+#init-text {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  margin-top: 200px;
+}

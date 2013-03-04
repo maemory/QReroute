@@ -30,7 +30,7 @@ function setDataSet(){
 			ftidShapes    = '1fowA6JsonMOGGxR8OIyuPcM8SqFZdGTDjI3ZLPM';
 			ftidTrips     = '1i2meZFHYydHYiq_XoacNjIt8CIz2P2Z1yKpa4uI';
 			ftidStops     = '1bSTnRcDDhv56Xw3DqvU65QfFT9a8uW7wGD0jXts';
-			ftidStopTimes = '1uUBGmr92p2E1-Yb4vLFh4t23DkapZ6nOpjlXP9c';
+			// ftidStopTimes = '1uUBGmr92p2E1-Yb4vLFh4t23DkapZ6nOpjlXP9c';
 			ftidRoutes    = '1uhXgYojzS6wEm-RoNC61EvPLrYI4fUdVi2Qq26k';
 			ftidCalendar  = '1iPE4A40RRzxityVSZ6wIjI4PDCvj4Gsw8W9J-AY';
 			dataCenter = new google.maps.LatLng(37.739348,-122.457809);
@@ -40,7 +40,7 @@ function setDataSet(){
 			ftidShapes    = '1y26_NR7wKqdAOYC_ynnL452Qp3RRVHPz4qLv1dc';
 			ftidTrips     = '1p2Ux_tIBUN-x3iwQI_kIzcrPnVQlCKJnQYuoDhU';
 			ftidStops     = '18r6CB0BVprQb_4ZRIGlZNg-GwJ7Jo6AYkJbnNrE';
-			ftidStopTimes = '';
+			// ftidStopTimes = '';
 			ftidRoutes    = '1EW4TvRx8HutyqPENC4BfvE_m3sWIQWflPPkn-NE';
 			ftidCalendar  = '1M69-7yIhvSKnkb_409CmpJVN19aCBttEyrr9_TU';
 			dataCenter = new google.maps.LatLng(41.9,-87.7);
@@ -50,7 +50,7 @@ function setDataSet(){
 			ftidShapes    = '1qhG923HlIE33kN39Uj9ynv0zfUZ_DmERytAvsN8';
 			ftidTrips     = '1XQTqk31yI9XsPGWWcQuB_QVHw33koeP55rIWN0Q';
 			ftidStops     = '1eHY-ncMWzJiOanfeFFytceidCkfsnvISnPRWNLw';
-			ftidStopTimes = '';
+			// ftidStopTimes = '';
 			ftidRoutes    = '1g6n7qZVyxWyxArzOvpSbho-yuxucaj81tv3GJMA';
 			ftidCalendar  = '15bcav2--Oybrj0bYRGfLDEowF13lOiQXTUpDjeo';
 			dataCenter = new google.maps.LatLng(37.739348,-122.457809);
@@ -60,9 +60,9 @@ function setDataSet(){
 			ftidShapes    = '1Cf5SCbFXXKlTZyiGvkMou6cxdSmPe_NE_vaPS5M';
 			ftidTrips     = '1RiLbpdFVi_rrtBMSENnxbBkCqW8IbiRZb9vZAx4';
 			ftidStops     = '1BclmGuWcVE3KHbrrGUt6vsswv5g1RNXvq3Nl66E';
-			ftidStopTimes = '';
+			// ftidStopTimes = '';
 			ftidRoutes    = '1NGIa4kK32rU7xnAIabsPoxCSj2-lTtFyTQxV0b8';
-			ftidCalendar  = '15bcav2--Oybrj0bYRGfLDEowF13lOiQXTUpDjeo';
+			ftidCalendar  = '1bdhWPvQy4nE5rlfWa2LXmfOgIKVbstVf1158qec';
 			dataCenter = new google.maps.LatLng(38.883825,-76.928735);
 			break;
 
@@ -71,7 +71,7 @@ function setDataSet(){
 			ftidShapes    = '1i2RNtijNTRAaoFMjbUX1wMo3smc2nQkAsCRfPBk';
 			ftidTrips     = '1I_yESx3I_Xet3JEM2l0DWHj76cu_gsx7vw2YYXM';
 			ftidStops     = '17Y_13i04CsvoEVpm7qgQ4SpxJbl8K9c4u1vyVo0';
-			ftidStopTimes = '1WwkY8qCCEcUTJ-bw0-gRhn3KQ6d0cNsZ4-DCnxo';
+			// ftidStopTimes = '1WwkY8qCCEcUTJ-bw0-gRhn3KQ6d0cNsZ4-DCnxo';
 			ftidRoutes    = '1nWHP5FJs_aPvCPDYYkG0GHHojbkvZDdjcnjoTfw';
 			ftidCalendar  = '1wetKxVGhNZKw0P294iWNvkRGkZTTaOypDWi9b34';
 			dataCenter = new google.maps.LatLng(40.753357,-73.984375);
@@ -80,8 +80,11 @@ function setDataSet(){
 	// remove 'select city' option from select
     $(".sel-city").remove();
 
-    // remove 'uneditable-input' from route button
-    // $("#route-select").removeClass('uneditable-input');
+    // fade in/out additional pull-downs after city has been selected
+    $("#route-select").fadeIn('slow');
+    $("#day-select").fadeOut('fast');
+
+    $("#init-text").fadeOut('fast');
 }
 
 function printGlobals() {
@@ -113,22 +116,18 @@ function initializeMap() {
 
 // On page load the route selection dropdown is populated
 function uniqueRouteId() {
-	var query = "SELECT 'route_id','route_color' FROM " + ftidRoutes
-	     + " GROUP BY 'route_id','route_color'"
+	var query = "SELECT 'route_id','route_short_name','route_long_name','route_color' FROM " + ftidRoutes
+	     // + " GROUP BY 'route_id','route_color'"
 	     + " LIMIT 1000"; 
 
 	queryTable(query,'jsonp',success);
 
 	function success(data) {
 
-		console.log('Based on city select, route query success');
-
 	    // Clear current info
 	    $(".route-option").remove();
 
 	    var rows = data['rows'];
-
-	    console.log('data is: ', rows);
 
 	    var ftData = document.getElementById('route-select');
 
@@ -140,12 +139,24 @@ function uniqueRouteId() {
 
 	    for (var i in rows) {
 	      var routeId = rows[i][0];
-	      var routeColor = rows[i][1];
-
+	      var routeShortName = rows[i][1].toLowerCase().toTitleCase();
+	      var routeLongName = rows[i][2].toLowerCase().toTitleCase();
+	      var routeColor = rows[i][3];
 
 	      if (routeId.length > 0) {
 		      var selectElement = document.createElement('option');
-		      selectElement.innerHTML = routeId;
+
+		      if (routeLongName.length > 0 && routeShortName.length > 0) {
+		      	selectElement.innerHTML = routeShortName + ": " + routeLongName;
+		      } else if (routeLongName.length > 0) {
+		      	selectElement.innerHTML = routeLongName;
+		      } else if (routeShortName.length > 0) {
+		      	selectElement.innerHTML = routeShortName;
+		      } else {
+				selectElement.innerHTML = routeId;
+		      }
+
+	      	  selectElement.setAttribute('data-routeId',routeId);
 
 		      if (routeColor.length > 0) {
 		      	selectElement.setAttribute('data-color',routeColor);
@@ -164,7 +175,7 @@ function uniqueRouteId() {
 function setRouteId() {
 	// get input from select statement
 	var selectInput = document.getElementById("route-select");
-	selRouteId = selectInput.options[selectInput.selectedIndex].text;
+	selRouteId = selectInput.options[selectInput.selectedIndex].getAttribute('data-routeId');
 	selRouteColor = selectInput.options[selectInput.selectedIndex].getAttribute('data-color');
 
 	// remove 'select route' option from select
@@ -181,7 +192,7 @@ function setRouteId() {
 	dispRouteInfo(selRouteId);
 
     // remove 'uneditable-input' from route button
-    // $("#heading-select").removeClass('uneditable-input');
+    $("#day-select").fadeIn('slow');
 }
 
 
@@ -251,10 +262,15 @@ function setServiceId() {
 	    }
 
 	    constructServiceId(services);
+
+	    // now built, fade in the heading selector
+	    $("#heading-select").fadeIn('fast');
 	}
 }
 
 function constructServiceId(services) {
+
+	console.log('selected routeId: ',selRouteId);
 
 	for (var i in services) {
 		// Query and return service_id where selected route_id matches
@@ -462,7 +478,7 @@ function dispRouteInfo(routeId) {
     clearRouteInfo();
 
 	// Pull info based on routeId
-	var query = "SELECT 'route_long_name','route_desc','route_url' FROM " + ftidRoutes
+	var query = "SELECT 'route_id','route_short_name','route_long_name','route_desc','route_url' FROM " + ftidRoutes
 	    + " WHERE 'route_id'='"+routeId+"'"
 	    + "LIMIT 1"; 
 
@@ -474,22 +490,34 @@ function dispRouteInfo(routeId) {
 	    var rows = data['rows'];
 
 	    for (i in rows) {
-	    	addDlListItems('Route',routeId,'routeInfo',routeData);
 
-	    	if (rows[i][0].length > 0) {
-	    		addDlListItems('Name',rows[i][0],'routeInfo',routeData);
-	    	}
+	    	var routeId        = rows[i][0];
+	    	var routeShortName = rows[i][1].toLowerCase().toTitleCase();
+	    	var routeLongName  = rows[i][2].toLowerCase().toTitleCase();
+	    	var routeDesc      = rows[i][3];
+	    	var routeUrl       = rows[i][4];
 
-	    	if (rows[i][1].length > 0) {
-	    		addDlListItems('Description',rows[i][1],'routeInfo',routeData);
-	    	}
+	  		if (routeShortName.length > 0 && routeLongName.length > 0) {
+	  			addDlListItems('Route',routeShortName + ": " + routeLongName,'routeInfo',routeData);
+	  		} else if (routeLongName.length > 0) {
+	  			addDlListItems('Route',routeLongName,'routeInfo',routeData);
+	  		} else if (routeShortName.length > 0) {
+	  			addDlListItems('Route',routeShortName,'routeInfo',routeData);
+	  		} else {
+		    	addDlListItems('Route',RouteId,'routeInfo',routeData);	  			
+	  		}
 
-	    	if (rows[i][2].length > 0) {
-	    		addDlListItems('More Info',rows[i][2],'routeInfo',routeData,'link');
-	    	}
+	  		if (routeDesc.length > 0) {
+		    	addDlListItems('Description',routeDesc,'routeInfo',routeData);
+	  		}
+
+	  		if (routeUrl.length > 0) {
+		    	addDlListItems('Website',routeUrl,'routeInfo',routeData,'link');
+	  		}
+
 	    }
 
-	    $('#info-window').fadeIn('slow');
+	    $('#info-window').fadeIn('fast');
 	    setTimeout(function(){
 			$('#info-window').fadeOut('2000');
 	    },5000);
@@ -505,61 +533,29 @@ function clearRouteInfo() {
 function clearHeadingSelect() {
     // Clear current info
     $(".heading-option").remove();
-}
-
-function routeColor(shapeId) {
-	if (shapeId[1] === '.') {
-		switch(shapeId[0]) {
-			case '1':
-			case '2':
-			case '3':
-				return "#EE352E";
-				break;
-			case '4':
-			case '5':
-			case '6':
-				return "#00933C";
-				break;
-			case 'A':
-			case 'C':
-			case 'E':
-				return "#2850AD";
-				break;
-			case 'B':
-			case 'D':
-			case 'F':
-			case 'M':
-				return '#FF6319';
-				break;
-			case 'N':
-			case 'Q':
-			case 'R':
-				return "#FCCC0A";
-				break;
-			case 'J':
-			case 'Z':
-				return "#996633";
-				break;
-			case 'G':
-				return "#6CBE45";
-				break;
-			case 'L':
-				return "#A7A9AC";
-				break;
-			case 'S':
-				return "#808183";
-				break;
-			case '7':
-				return "#B933AD";
-				break;
-			default:
-				return "#808183";
-		}
-	} else {
-		return "#000000";
-	}
+    // hide heading select menu
+    $("#heading-select").fadeOut('fast');
 }
 
 function toggleTransit() {
 	transitLayer.setMap(transitLayer.getMap() ? null : map);
 }
+
+// convert strings to title case
+String.prototype.toTitleCase = function () {
+  var smallWords = /^(a|an|and|as|at|but|by|en|for|if|in|of|on|or|the|to|vs?\.?|via)$/i;
+
+  return this.replace(/([^\W_]+[^\s-]*) */g, function (match, p1, index, title) {
+    if (index > 0 && index + p1.length !== title.length &&
+      p1.search(smallWords) > -1 && title.charAt(index - 2) !== ":" && 
+      title.charAt(index - 1).search(/[^\s-]/) < 0) {
+      return match.toLowerCase();
+    }
+
+    if (p1.substr(1).search(/[A-Z]|\../) > -1) {
+      return match;
+    }
+
+    return match.charAt(0).toUpperCase() + match.substr(1);
+  });
+};

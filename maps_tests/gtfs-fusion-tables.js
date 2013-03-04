@@ -35,6 +35,8 @@ function queryTable(queryString,dataType,successFunc) {
 	});
 }
 
+
+
 function queryError(jqXHR,textStatus,errorThrown) {
 	console.log('Error in SQL request: ' + textStatus);
 	if (errorThrown) {
