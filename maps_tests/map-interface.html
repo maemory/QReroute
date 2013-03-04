@@ -18,30 +18,41 @@
             <a class="brand" href="http://www.stanford.edu/~memory">memory</a>
             
             <form class="navbar-form form-inline">
-            <select id="data-select" onchange="setDataSet(),initializeMap(),clearRouteInfo(),clearHeadingSelect()" class="input-xlarge">
-              <option class="sel-city">select dataset</option>
-              <option data-set="MTA">MTA (New York)</option>
-              <option data-set="SFMTA">SFMTA (San Francisco)</option>
-              <option data-set="WMATA">WMATA (Washington, D.C.)</option>
-              <!-- <option data-set="BART">BART (S.F.)</option> -->
-              <option data-set="CTA">CTA (Chicago)</option>
-            </select>
+              <select id="data-select" onchange="setDataSet(),initializeMap(),clearBottomInfo(),clearHeadingSelect()" class="input-xlarge">
+                <option class="sel-city">select dataset</option>
+                <option data-set="MTA">MTA (New York)</option>
+                <option data-set="SFMTA">SFMTA (San Francisco)</option>
+                <option data-set="WMATA">WMATA (Washington, D.C.)</option>
+                <!-- <option data-set="BART">BART (S.F.)</option> -->
+                <option data-set="CTA">CTA (Chicago)</option>
+              </select>
 
-            <select id="route-select" onchange="setRouteId(),setServiceId()" class="input input-xxlarge" style="display: none;">
-            </select>
+              <select id="route-select" onchange="setRouteId(),setServiceId()" class="input input-xxlarge" style="display: none;">
+              </select>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
 
-            <select id="day-select" onchange="setDay(),setServiceId()" style="width: 110px; display: none;">
-              <option>Monday</option>
-              <option>Tuesday</option>
-              <option>Wednesday</option>
-              <option>Thursday</option>
-              <option>Friday</option>
-              <option>Saturday</option>
-              <option>Sunday</option>
-            </select>
+        <div id="extra-select" class="navbar-extra">
+      <div class="container">
+        <div class="navbar">
+          <div class="navbar-inner">
+            <form class="navbar-form form-inline">
+              <select id="day-select" onchange="setDay(),setServiceId()" style="width: 120px;">
+                <option>Monday</option>
+                <option>Tuesday</option>
+                <option>Wednesday</option>
+                <option>Thursday</option>
+                <option>Friday</option>
+                <option>Saturday</option>
+                <option>Sunday</option>
+              </select>
 
-            <select id="heading-select" onchange="setShapeId(),plotShapeId()" class="input-xlarge" style="display: none;">
-            </select>
+              <select id="heading-select" onchange="setShapeId(),plotShapeId()" class="input-xxlarge">
+              </select>
+            </form>
           </div>
         </div>
       </div>
@@ -59,10 +70,10 @@
       </div>
     </div>
 
-    <div id="info-window">
+    <div id="bottom-data">
       <div class="container">
-        <div id="route-window" class="span12 well">
-          <dl id="route-data" class="dl-horizontal"></dl>
+        <div id="info-window" class="span12 well">
+          <dl id="info-data" class="dl-horizontal"></dl>
         </div>
       </div>
     </div>

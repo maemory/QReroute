@@ -26,6 +26,8 @@ function queryTable(queryString,dataType,successFunc) {
 	url.push('&key=' + apikey);
 	url.push('&callback=?');
 
+	// console.log(url.join(''));
+
 	// Send the request using jQuery
 	$.ajax({
 	  url: url.join(''),
