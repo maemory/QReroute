@@ -131,56 +131,56 @@ function uniqueRouteId() {
 	     // + " GROUP BY 'route_id','route_color'"
 	     + " LIMIT 1000"; 
 
-	queryTable(query,'jsonp',success);
+	queryTable(query,'jsonp',successRouteId);
+}
 
-	function success(data) {
+function successRouteId(data) {
 
-	    // Clear current info
-	    $(".route-option").remove();
+    // Clear current info
+    $(".route-option").remove();
 
-	    var rows = data['rows'];
+    var rows = data['rows'];
 
-	    var ftData = document.getElementById('route-select');
+    var ftData = document.getElementById('route-select');
 
-	    var selectElement = document.createElement('option');
-	    selectElement.innerHTML ="Select Route";
-	    selectElement.className = 'route-option sel-route';
+    var selectElement = document.createElement('option');
+    selectElement.innerHTML ="Select Route";
+    selectElement.className = 'route-option sel-route';
 
-	    ftData.appendChild(selectElement);
+    ftData.appendChild(selectElement);
 
-	    for (var i in rows) {
-	      var routeId = rows[i][0];
-	      var routeShortName = rows[i][1].toLowerCase().toTitleCase();
-	      var routeLongName = rows[i][2].toLowerCase().toTitleCase();
-	      var routeColor = rows[i][3];
+    for (var i in rows) {
+      var routeId = rows[i][0];
+      var routeShortName = rows[i][1].toLowerCase().toTitleCase();
+      var routeLongName = rows[i][2].toLowerCase().toTitleCase();
+      var routeColor = rows[i][3];
 
-	      if (routeId.length > 0) {
-		      var selectElement = document.createElement('option');
+      if (routeId.length > 0) {
+	      var selectElement = document.createElement('option');
 
-		      if (routeLongName.length > 0 && routeShortName.length > 0) {
-		      	selectElement.innerHTML = routeShortName + ": " + routeLongName;
-		      } else if (routeLongName.length > 0) {
-		      	selectElement.innerHTML = routeLongName;
-		      } else if (routeShortName.length > 0) {
-		      	selectElement.innerHTML = routeShortName;
-		      } else {
-				selectElement.innerHTML = routeId;
-		      }
-
-	      	  selectElement.setAttribute('data-routeId',routeId);
-
-		      if (routeColor.length > 0) {
-		      	selectElement.setAttribute('data-color',routeColor);
-		      } else {
-		      	selectElement.setAttribute('data-color','03389C');
-		      }
-
-		      selectElement.className = 'route-option';
-
-	          ftData.appendChild(selectElement);
+	      if (routeLongName.length > 0 && routeShortName.length > 0) {
+	      	selectElement.innerHTML = routeShortName + ": " + routeLongName;
+	      } else if (routeLongName.length > 0) {
+	      	selectElement.innerHTML = routeLongName;
+	      } else if (routeShortName.length > 0) {
+	      	selectElement.innerHTML = routeShortName;
+	      } else {
+			selectElement.innerHTML = routeId;
 	      }
-	    }
-	}
+
+      	  selectElement.setAttribute('data-routeId',routeId);
+
+	      if (routeColor.length > 0) {
+	      	selectElement.setAttribute('data-color',routeColor);
+	      } else {
+	      	selectElement.setAttribute('data-color','03389C');
+	      }
+
+	      selectElement.className = 'route-option';
+
+          ftData.appendChild(selectElement);
+      }
+    }
 }
 
 function setRouteId() {
@@ -189,25 +189,30 @@ function setRouteId() {
 	selRouteId = selectInput.options[selectInput.selectedIndex].getAttribute('data-routeId');
 	selRouteColor = selectInput.options[selectInput.selectedIndex].getAttribute('data-color');
 
+	// clear current polyline
+	clearPolylines(routes);
+	cleanPolylines(routes);
+	clearPolylines(backgroundRoutes);
+	cleanPolylines(backgroundRoutes);
+
 	// remove 'select route' option from select
     $(".sel-route").remove();
-
-    // Add 'select heading' to heading select
-    var appendTarget = document.getElementById('heading-select');
-    var element = document.createElement('option');
-    element.innerHTML = "Select Direction";
-    element.className = 'heading-option sel-headsign';
-    appendTarget.appendChild(element);
 
     // display route info
 	dispRouteInfo(selRouteId);
 
-    // remove 'uneditable-input' from route button
+    // fade in second form bar
     $("#extra-select").fadeIn('slow');
 }
 
-
 function setDay() {
+
+	// clear current polyline
+	clearPolylines(routes);
+	cleanPolylines(routes);
+	clearPolylines(backgroundRoutes);
+	cleanPolylines(backgroundRoutes);
+
 	// get input from select statement
 	var selectInput = document.getElementById("day-select");
 	var i = selectInput.selectedIndex;
@@ -238,6 +243,7 @@ function setDay() {
 
 function setServiceId() {
 
+	// Clear current heading display elements
     clearHeadingSelect();
 
     // Add select heading statement
@@ -246,9 +252,6 @@ function setServiceId() {
     element.innerHTML = "Select Heading";
     element.className = 'heading-option sel-headsign';
     appendTarget.appendChild(element);
-
-
-	var services = new Array;
 
 	// Get list of possible services for selected day of week
 
@@ -259,23 +262,38 @@ function setServiceId() {
 	    + " LIMIT 100"; 
 
 	queryTable(query,'jsonp',successService);
+}
 
-	function successService(data) {
+function successService(data) {
 
-	    var rows = data['rows'];
+	var services = new Array;
 
-	    for (var i in rows) {
-	      var serviceId = rows[i][0];
+    var rows = data['rows'];
 
-	      if (serviceId.length > 0) {
-			services.push(serviceId);
-	      }
-	    }
+    for (var i in rows) {
+      var serviceId = rows[i][0];
 
-	    constructServiceId(services);
+      if (serviceId.length > 0) {
+		services.push(serviceId);
+      }
+    }
 
-	    // now built, fade in the heading selector
-	    $("#heading-select").fadeIn('fast');
+    constructServiceId(services);
+}
+
+function ifEmptyHeadings() {
+	// count inputs listed in select statement
+	// var selectInput = document.getElementById("heading-select").length;
+	if ( $("#heading-select option").length < 2 ) {
+		// clear item in menu
+		clearHeadingSelect();
+
+		var appendTarget = document.getElementById('heading-select');
+
+		var element = document.createElement('option');
+	    element.innerHTML = 'No service this day';
+	    element.className = 'heading-option';
+        appendTarget.appendChild(element);
 	}
 }
 
@@ -290,52 +308,55 @@ function constructServiceId(services) {
 		    + " LIMIT 50"; 
 
 		queryTable(query,'jsonp',successServiceId);
+	}
 
-		function successServiceId(data) {
-		    var rows = data['rows'];
-
-		    for (var row in rows) {
-		      var serviceId = rows[row][0];
-			  var shapeId = rows[row][1];
-			  var headsign = rows[row][2].toLowerCase().toTitleCase();
-
-		      // Add heading to list of headings
-		      var appendTarget = document.getElementById('heading-select');
-
-		      if (serviceId.length > 0 && shapeId.length > 0 && headsign.length > 0) {
-
-				selServiceId = serviceId;
-
-			    var element = document.createElement('option');
-			    element.innerHTML = headsign;
-			    element.className = 'heading-option';
-			    element.setAttribute('data-shapeId',shapeId);
-
-		        appendTarget.appendChild(element);
-		      } else if (serviceId.length > 0 && shapeId.length > 0) {
-
-				selServiceId = serviceId;
-
-			    var element = document.createElement('option');
-			    element.innerHTML = selRouteId + ' (' + serviceId + ')';
-			    element.className = 'heading-option';
-			    element.setAttribute('data-shapeId',shapeId);
-
-		        appendTarget.appendChild(element);
-
-		      }
-		    }
-
-		}		    
-    }
+	setTimeout(function(){
+		ifEmptyHeadings();
+	},1500);
 }
+
+function successServiceId(data) {
+    var rows = data['rows'];
+
+    for (var row in rows) {
+      var serviceId = rows[row][0];
+	  var shapeId = rows[row][1];
+	  var headsign = rows[row][2].toLowerCase().toTitleCase();
+
+      // Add heading to list of headings
+      var appendTarget = document.getElementById('heading-select');
+
+      if (serviceId.length > 0 && shapeId.length > 0 && headsign.length > 0) {
+
+		selServiceId = serviceId;
+
+	    var element = document.createElement('option');
+	    element.innerHTML = headsign;
+	    element.className = 'heading-option';
+	    element.setAttribute('data-shapeId',shapeId);
+
+        appendTarget.appendChild(element);
+      } else if (serviceId.length > 0 && shapeId.length > 0) {
+
+		selServiceId = serviceId;
+
+	    var element = document.createElement('option');
+	    element.innerHTML = selRouteId + ' (' + serviceId + ')';
+	    element.className = 'heading-option';
+	    element.setAttribute('data-shapeId',shapeId);
+
+        appendTarget.appendChild(element);
+
+      }
+    }
+}		    
 
 function setShapeId() {
 	// get input from select statement
 	var selectInput = document.getElementById("heading-select");
 	selShapeId = selectInput.options[selectInput.selectedIndex].getAttribute('data-shapeId');
 
-	// remove 'select city' option from select
+	// remove 'select heading' option from select
     $(".sel-headsign").remove();
 }
 
@@ -352,84 +373,10 @@ function plotShapeId() {
     plotPolylines(routes,map);
 }
 
-function uniqueShapeId() {
-	var query = "SELECT 'shape_id' FROM " + ftidTrips
-	     + " GROUP BY 'shape_id'"
-	     + " LIMIT 10"; 
-
-	queryTable(query,'jsonp',success);
-
-	function success(data) {
-		var rows = data['rows'];
-		if (rows === null) {
-			alert('No data received');
-		} else {
-			var ftData = document.getElementById('shape-select');
-
-		    for (var i in rows) {
-		      var route = rows[i][0];
-
-		      if (route.length > 0) {
-			      var selectElement = document.createElement('option');
-			      selectElement.innerHTML = route;
-			      selectElement.className = 'select-disp';
-
-		          ftData.appendChild(selectElement);
-		      }
-		    }
-		}
-	};
-}
-
-function uniqueTripId() {
-	var query = "SELECT 'trip_id' FROM " + ftidStopTimes
-	     + " GROUP BY 'trip_id'"
-	     + " LIMIT 5"; 
-
-	queryTable(query,'jsonp',success);
-
-	function success(data) {
-	    var rows = data['rows'];
-	    var ftData = document.getElementById('shape-select');
-	    for (var i in rows) {
-	      var trip = rows[i][0];
-
-	      if (trip.length > 0) {
-		      var selectElement = document.createElement('option');
-		      selectElement.innerHTML = trip;
-		      selectElement.className = 'select-disp';
-
-	          ftData.appendChild(selectElement);
-	      }
-	    }
-	}
-}
-
-function uniqueServiceId() {
-	var query = "SELECT 'service_id' FROM " + ftidTrips
-	     + " GROUP BY 'service_id'"
-	     + " LIMIT 50"; 
-
-	queryTable(query,'jsonp',successServiceId);
-
-	function successServiceId(data) {
-	    var rows = data['rows'];
-	    var ftData = document.getElementById('shape-select');
-	    for (var i in rows) {
-	      var service = rows[i][0];
-
-		    if (service.length > 0) {
-		      var selectElement = document.createElement('option');
-		      selectElement.innerHTML = service;
-		      selectElement.className = 'select-disp';
-
-	          ftData.appendChild(selectElement);
-		    }
-	    }
-	}
-}
-
 function addPolyline(shapeId,routeColor) {
+
+	setPercentage('prog-bar', 0);
+	$("#load-progress").fadeIn('fast');
 
 	var polyOptions = {
 	    strokeColor: '#' + routeColor,
@@ -454,9 +401,10 @@ function addPolyline(shapeId,routeColor) {
 	    + " ORDER BY 'shape_pt_sequence'"
 	    + "LIMIT 5000"; 
 
-	queryTable(query,'jsonp',success);
+	queryTable(query,'jsonp',successPoly);
 
-	function success(data) {
+	function successPoly(data) {
+
 	    var rows = data['rows'];
 	    var ftData = document.getElementById('ft-data');
 	    for (var i in rows) {
@@ -465,7 +413,12 @@ function addPolyline(shapeId,routeColor) {
 
 		  path.push(new google.maps.LatLng(lat_i,long_i));
 		  backgroundPath.push(new google.maps.LatLng(lat_i,long_i));
+
+		  var perc = 100 * (i+1) / (rows.length + 1);
+	      setPercentage('prog-bar', perc);
 	    }
+
+		$("#load-progress").fadeOut('fast');
 	}
 
 	// specify interactivity of polyline
@@ -501,36 +454,35 @@ function dispAgencyInfo() {
 	var query = "SELECT 'agency_name','agency_url' FROM " + ftidAgency
 	    + " LIMIT 5"; 
 
-	queryTable(query,'jsonp',success);
+	queryTable(query,'jsonp',successAgencyInfo);
+}
 
-	function success(data) {
-		var bottomData = document.getElementById('info-data');
+function successAgencyInfo(data) {
+	var bottomData = document.getElementById('info-data');
 
-	    var rows = data['rows'];
+    var rows = data['rows'];
 
-	    console.log('agency info: ',rows);
+    console.log('agency info: ',rows);
 
-	    for (i in rows) {
+    for (i in rows) {
 
-	    	var agencyName = rows[i][0].toLowerCase().toTitleCase();
-	    	var agencyUrl = rows[i][1];
+    	var agencyName = rows[i][0].toLowerCase().toTitleCase();
+    	var agencyUrl = rows[i][1];
 
-	  		if (agencyName.length > 0) {
-		    	addDlListItems('Agency',agencyName,'bottomInfo',bottomData);
-	  		}
+  		if (agencyName.length > 0) {
+	    	addDlListItems('Agency',agencyName,'bottomInfo',bottomData);
+  		}
 
-	  		if (agencyUrl.length > 0) {
-		    	addDlListItems('Website',agencyUrl,'bottomInfo',bottomData,'link');
-	  		}
+  		if (agencyUrl.length > 0) {
+	    	addDlListItems('Website',agencyUrl,'bottomInfo',bottomData,'link');
+  		}
 
-	    }
+    }
 
-	    $('#bottom-data').fadeIn('fast');
-	    setTimeout(function(){
-			$('#bottom-data').fadeOut('2000');
-	    },5000);
-
-	}
+    $('#bottom-data').fadeIn('fast');
+    setTimeout(function(){
+		$('#bottom-data').fadeOut('2000');
+    },5000);
 }
 
 function dispRouteInfo(routeId) {
@@ -543,47 +495,46 @@ function dispRouteInfo(routeId) {
 	    + " WHERE 'route_id'='"+routeId+"'"
 	    + "LIMIT 1"; 
 
-	queryTable(query,'jsonp',success);
+	queryTable(query,'jsonp',successRouteInfo);
+}
 
-	function success(data) {
-		var bottomData = document.getElementById('info-data');
+function successRouteInfo(data) {
+	var bottomData = document.getElementById('info-data');
 
-	    var rows = data['rows'];
+    var rows = data['rows'];
 
-	    for (i in rows) {
+    for (i in rows) {
 
-	    	var routeId        = rows[i][0];
-	    	var routeShortName = rows[i][1].toLowerCase().toTitleCase();
-	    	var routeLongName  = rows[i][2].toLowerCase().toTitleCase();
-	    	var routeDesc      = rows[i][3];
-	    	var routeUrl       = rows[i][4];
+    	var routeId        = rows[i][0];
+    	var routeShortName = rows[i][1].toLowerCase().toTitleCase();
+    	var routeLongName  = rows[i][2].toLowerCase().toTitleCase();
+    	var routeDesc      = rows[i][3];
+    	var routeUrl       = rows[i][4];
 
-	  		if (routeShortName.length > 0 && routeLongName.length > 0) {
-	  			addDlListItems('Route',routeShortName + ": " + routeLongName,'bottomInfo',bottomData);
-	  		} else if (routeLongName.length > 0) {
-	  			addDlListItems('Route',routeLongName,'bottomInfo',bottomData);
-	  		} else if (routeShortName.length > 0) {
-	  			addDlListItems('Route',routeShortName,'bottomInfo',bottomData);
-	  		} else {
-		    	addDlListItems('Route',RouteId,'bottomInfo',bottomData);	  			
-	  		}
+  		if (routeShortName.length > 0 && routeLongName.length > 0) {
+  			addDlListItems('Route',routeShortName + ": " + routeLongName,'bottomInfo',bottomData);
+  		} else if (routeLongName.length > 0) {
+  			addDlListItems('Route',routeLongName,'bottomInfo',bottomData);
+  		} else if (routeShortName.length > 0) {
+  			addDlListItems('Route',routeShortName,'bottomInfo',bottomData);
+  		} else {
+	    	addDlListItems('Route',RouteId,'bottomInfo',bottomData);	  			
+  		}
 
-	  		if (routeDesc.length > 0) {
-		    	addDlListItems('Description',routeDesc,'bottomInfo',bottomData);
-	  		}
+  		if (routeDesc.length > 0) {
+	    	addDlListItems('Description',routeDesc,'bottomInfo',bottomData);
+  		}
 
-	  		if (routeUrl.length > 0) {
-		    	addDlListItems('Website',routeUrl,'bottomInfo',bottomData,'link');
-	  		}
+  		if (routeUrl.length > 0) {
+	    	addDlListItems('Website',routeUrl,'bottomInfo',bottomData,'link');
+  		}
 
-	    }
+    }
 
-	    $('#bottom-data').fadeIn('fast');
-	    setTimeout(function(){
-			$('#bottom-data').fadeOut('2000');
-	    },5000);
-
-	}
+    $('#bottom-data').fadeIn('fast');
+    setTimeout(function(){
+		$('#bottom-data').fadeOut('2000');
+    },5000);
 }
 
 function clearBottomInfo() {
@@ -594,8 +545,6 @@ function clearBottomInfo() {
 function clearHeadingSelect() {
     // Clear current info
     $(".heading-option").remove();
-    // hide heading select menu
-    $("#heading-select").fadeOut('fast');
 }
 
 function toggleTransit() {
