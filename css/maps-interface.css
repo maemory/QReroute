@@ -1,5 +1,6 @@
-/* CUSTOMIZE THE NAVBAR
--------------------------------------------------- */
+body {
+  background: url(../images/textures/satinweave.png) repeat 0 0;
+}
 
 /* Special class on .container surrounding .navbar, used for positioning it into place. */
 .navbar-wrapper {
@@ -9,7 +10,8 @@
   right: 0;
   z-index: 10;
   margin-top: 10px;
-  margin-bottom: -90px; /* Negative margin to pull up carousel. 90px is roughly margins and height of navbar. */
+  margin-bottom: -90px;
+  display: none;
 }
 
 .navbar-extra {
@@ -45,4 +47,14 @@
   right: 0;
   z-index: 10;
   margin-top: 200px;
+}
+
+/* Font specification */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Raleway', Georgia, Times, sans-serif;
+    font-weight: 500;
+}
+p, div {
+    font-family: 'Raleway', Helvetica, Arial, sans-serif;
+    font-weight: 300;
 }

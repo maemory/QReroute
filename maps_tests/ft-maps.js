@@ -19,6 +19,11 @@ var selTripId;
 var selShapeId;
 var selDay = 'monday';
 
+function loadBar() {
+	setTimeout(function(){
+		$("#wrapper").fadeIn('slow');
+	},1000);
+}
 
 function setDataSet(){
 	// get input from select statement

@@ -4,27 +4,28 @@
   <head>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 
-    <link href="../css/bootstrap.css" rel="stylesheet">
+    <link href="../css/interface-bootstrap.css" rel="stylesheet">
 <!--     <link href="../css/responsive.css" rel="stylesheet"> -->
      <link href="../css/maps-interface.css" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Raleway:300,500' rel='stylesheet' type='text/css'>
   </head>
 
-  <body>
+  <body onload="loadBar()">
 
-    <div class="navbar-wrapper">
+    <div id="wrapper" class="navbar-wrapper">
       <div class="container">
         <div class="navbar">
           <div class="navbar-inner">
             <a class="brand" href="http://www.stanford.edu/~memory">memory</a>
             
             <form class="navbar-form form-inline">
-              <select id="data-select" onchange="setDataSet(),initializeMap(),clearBottomInfo(),clearHeadingSelect()" class="input-xlarge">
-                <option class="sel-city">select dataset</option>
-                <option data-set="MTA">MTA (New York)</option>
-                <option data-set="SFMTA">SFMTA (San Francisco)</option>
-                <option data-set="WMATA">WMATA (Washington, D.C.)</option>
-                <!-- <option data-set="BART">BART (S.F.)</option> -->
-                <option data-set="CTA">CTA (Chicago)</option>
+              <select id="data-select" onchange="setDataSet(),initializeMap(),clearBottomInfo(),clearHeadingSelect()" class="input-large">
+                <option class="sel-option sel-city">select dataset</option>
+                <option class="sel-option" data-set="MTA">MTA (New York)</option>
+                <option class="sel-option" data-set="SFMTA">SFMTA (San Francisco)</option>
+                <option class="sel-option" data-set="WMATA">WMATA (Washington, D.C.)</option>
+                <!-- <option class="sel-option" data-set="BART">BART (S.F.)</option> -->
+                <option class="sel-option" data-set="CTA">CTA (Chicago)</option>
               </select>
 
               <select id="route-select" onchange="setRouteId(),setServiceId()" class="input input-xxlarge" style="display: none;">
@@ -35,7 +36,7 @@
       </div>
     </div>
 
-        <div id="extra-select" class="navbar-extra">
+    <div id="extra-select" class="navbar-extra">
       <div class="container">
         <div class="navbar">
           <div class="navbar-inner">
