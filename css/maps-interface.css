@@ -49,6 +49,16 @@ body {
   margin-top: 200px;
 }
 
+/* #map-container {
+  margin-top: 110px;
+}*/
+
+/* #map_canvas {
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
+}*/
+
 /* Font specification */
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Raleway', Georgia, Times, sans-serif;

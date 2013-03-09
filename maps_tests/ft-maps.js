@@ -113,6 +113,7 @@ function initializeMap() {
 	  zoom: 11,
 	  streetViewControl: false,
 	  panControl: false,
+	  disableDefaultUI: true,
 	  mapTypeId: google.maps.MapTypeId.HYBRID,
 	};
 
@@ -266,6 +267,9 @@ function setServiceId() {
 
 function successService(data) {
 
+	setPercentage('prog-bar', 0);
+	$("#load-progress").fadeIn('fast');
+
 	var services = new Array;
 
     var rows = data['rows'];
@@ -276,9 +280,13 @@ function successService(data) {
       if (serviceId.length > 0) {
 		services.push(serviceId);
       }
+
+      setPercentage('prog-bar', 100 * (i+1) / (rows.length + 1));
     }
 
     constructServiceId(services);
+
+	$("#load-progress").fadeOut('fast');
 }
 
 function ifEmptyHeadings() {
@@ -312,7 +320,7 @@ function constructServiceId(services) {
 
 	setTimeout(function(){
 		ifEmptyHeadings();
-	},1500);
+	},2500);
 }
 
 function successServiceId(data) {
@@ -401,9 +409,13 @@ function addPolyline(shapeId,routeColor) {
 	    + " ORDER BY 'shape_pt_sequence'"
 	    + "LIMIT 5000"; 
 
+	setPercentage('prog-bar', 20);
+
 	queryTable(query,'jsonp',successPoly);
 
 	function successPoly(data) {
+
+		setPercentage('prog-bar', 30);
 
 	    var rows = data['rows'];
 	    var ftData = document.getElementById('ft-data');
@@ -414,7 +426,7 @@ function addPolyline(shapeId,routeColor) {
 		  path.push(new google.maps.LatLng(lat_i,long_i));
 		  backgroundPath.push(new google.maps.LatLng(lat_i,long_i));
 
-		  var perc = 100 * (i+1) / (rows.length + 1);
+		  var perc = 30 + (80 * (i+1) / (rows.length + 1));
 	      setPercentage('prog-bar', perc);
 	    }
 
